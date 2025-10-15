@@ -44,12 +44,11 @@ class ActivationAnalyzer:
             "ln_final",  # Final layer norm
         ]
         
-        # Add some attention and MLP layers
-        for layer in range(min(4, self.model.cfg.n_layers)):  # First 4 layers
+        # Add all attention and MLP layers
+        for layer in range(self.model.cfg.n_layers):  # All layers
             activation_names.extend([
-                f"blocks.{layer}.attn.hook_result",  # Attention output
+                f"blocks.{layer}.attn.hook_pattern", # Attention patterns (this exists)
                 f"blocks.{layer}.mlp.hook_post",     # MLP output
-                f"blocks.{layer}.attn.hook_pattern", # Attention patterns
             ])
         
         all_activations = {name: [] for name in activation_names}
@@ -202,12 +201,18 @@ class ActivationAnalyzer:
             # Create filename for this activation type
             filename = f"raw_{activation_name.replace('.', '_').replace('hook_', '')}.npz"
             
+            # Convert activations to a format that can be saved (object array to handle different shapes)
+            # Each activation in the list can have different shapes, so we need object dtype
+            activations_array = np.empty(len(activation_list), dtype=object)
+            for i, activation in enumerate(activation_list):
+                activations_array[i] = activation
+            
             # Prepare data for saving
             save_data = {
-                'activations': activation_list,
-                'prompts': activation_data["prompts"],
-                'categories': activation_data["categories"],
-                'activation_name': activation_name
+                'activations': activations_array,
+                'prompts': np.array(activation_data["prompts"]),
+                'categories': np.array(activation_data["categories"]),
+                'activation_name': np.array(activation_name)
             }
             
             # Save as compressed numpy file

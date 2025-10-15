@@ -113,8 +113,8 @@ def main():
     print("Self-Referent Activation Analysis Results")
     print("=" * 50)
     
-    # Load results
-    results = load_results('results_activation_analysis/run_20251015_094822/activations.json')
+    # Load results (30 prompts: 10 per category)
+    results = load_results('results_activation_analysis/run_20251015_112059/activations.json')
     
     print(f"Analyzed {results['num_prompts_analyzed']} prompts")
     print(f"Prompts per category: {results['prompts_per_category']}")
@@ -148,7 +148,7 @@ def main():
     print(f"Minimum ratio (self/confounder): {min_ratio:.2f}x")
     
     # Save detailed results
-    df.to_csv('results_activation_analysis/run_20251015_094822/activation_analysis.csv', index=False)
+    df.to_csv('results_activation_analysis/run_20251015_112059/activation_analysis.csv', index=False)
     print(f"\n✓ Detailed results saved to: activation_analysis.csv")
 
 if __name__ == "__main__":
