@@ -46,12 +46,17 @@ class OutputManager:
         filepath = os.path.join(self.run_dir, filename)
         
         # Convert numpy arrays to lists for JSON serialization
-        serializable_data = {}
-        for key, value in activations.items():
-            if hasattr(value, 'tolist'):  # numpy array
-                serializable_data[key] = value.tolist()
+        def make_serializable(obj):
+            if hasattr(obj, 'tolist'):  # numpy array
+                return obj.tolist()
+            elif isinstance(obj, dict):
+                return {k: make_serializable(v) for k, v in obj.items()}
+            elif isinstance(obj, list):
+                return [make_serializable(item) for item in obj]
             else:
-                serializable_data[key] = value
+                return obj
+        
+        serializable_data = make_serializable(activations)
         
         with open(filepath, 'w') as f:
             json.dump(serializable_data, f, indent=2)
