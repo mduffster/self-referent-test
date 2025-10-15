@@ -165,13 +165,25 @@ class ActivationAnalyzer:
             
             # Calculate statistics if we have data
             if self_referent_acts and (confounder_acts or neutral_acts):
+                # Calculate means safely, handling different array shapes
+                def safe_mean(activation_list):
+                    if not activation_list:
+                        return None
+                    try:
+                        # Try to concatenate and take mean
+                        concatenated = np.concatenate([act.flatten() for act in activation_list])
+                        return float(np.mean(concatenated))
+                    except:
+                        # If concatenation fails, return None
+                        return None
+                
                 comparison_results[activation_name] = {
                     "self_referent_count": len(self_referent_acts),
                     "confounder_count": len(confounder_acts),
                     "neutral_count": len(neutral_acts),
-                    "self_referent_mean": np.mean(self_referent_acts) if self_referent_acts else None,
-                    "confounder_mean": np.mean(confounder_acts) if confounder_acts else None,
-                    "neutral_mean": np.mean(neutral_acts) if neutral_acts else None,
+                    "self_referent_mean": safe_mean(self_referent_acts),
+                    "confounder_mean": safe_mean(confounder_acts),
+                    "neutral_mean": safe_mean(neutral_acts),
                 }
         
         return comparison_results
