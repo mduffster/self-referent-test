@@ -9,10 +9,12 @@ import pandas as pd
 from transformer_lens import HookedTransformer
 from prompts import get_all_prompts
 from output_manager import OutputManager
+from deterministic import set_seed, verify_determinism
 from typing import Dict, List, Any, Tuple
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import argparse
 
 class ActivationAnalyzer:
     """Analyzes model activations for self-referent patterns."""
@@ -258,10 +260,36 @@ class ActivationAnalyzer:
         
         return results
 
+def parse_args():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description="Activation analysis for self-referent experiment")
+    
+    parser.add_argument("--model_id", default="mistralai/Mistral-7B-Instruct-v0.1",
+                       help="HuggingFace model ID (default: mistralai/Mistral-7B-Instruct-v0.1)")
+    parser.add_argument("--device", default="cpu", choices=["cpu", "cuda"],
+                       help="Device to run on (default: cpu)")
+    parser.add_argument("--prompts_per_category", type=int, default=3,
+                       help="Number of prompts per category (default: 3)")
+    parser.add_argument("--seed", type=int, default=123,
+                       help="Random seed for reproducibility (default: 123)")
+    
+    return parser.parse_args()
+
 def main():
     """Run activation analysis experiment."""
+    args = parse_args()
+    
     print("Self-Referent Activation Analysis")
     print("=" * 40)
+    print(f"Model: {args.model_id}")
+    print(f"Device: {args.device}")
+    print(f"Prompts per category: {args.prompts_per_category}")
+    print(f"Seed: {args.seed}")
+    print("=" * 40)
+    
+    # Set up determinism
+    set_seed(args.seed)
+    verify_determinism()
     
     # Initialize output manager
     output_manager = OutputManager("results_activation_analysis")
@@ -269,17 +297,17 @@ def main():
     # Load model
     print("Loading model...")
     model = HookedTransformer.from_pretrained(
-        "mistralai/Mistral-7B-Instruct-v0.1",
-        device="cpu",
-        torch_dtype=torch.float32
+        args.model_id,
+        device=args.device,
+        dtype=torch.float32
     )
     print("✓ Model loaded successfully")
     
     # Initialize analyzer
     analyzer = ActivationAnalyzer(model, output_manager)
     
-    # Run analysis (3 prompts per category = 9 total)
-    results = analyzer.run_analysis(num_prompts_per_category=3)
+    # Run analysis
+    results = analyzer.run_analysis(num_prompts_per_category=args.prompts_per_category)
     
     print(f"\n✓ Analysis complete!")
     print(f"Results saved to: {output_manager.run_dir}")

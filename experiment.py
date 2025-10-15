@@ -1,5 +1,5 @@
 """
-Initial experiment script for self-referent analysis with llama-8B using TransformerLens.
+Initial experiment script for self-referent analysis with Mistral-7B using TransformerLens.
 """
 
 import torch
@@ -7,26 +7,30 @@ import transformer_lens
 from transformer_lens import HookedTransformer
 from prompts import get_all_prompts, get_prompt_counts
 from output_manager import OutputManager
+from deterministic import set_seed, verify_determinism
 import numpy as np
 import pandas as pd
+import argparse
+import sys
 
-def load_model(model_name="mistralai/Mistral-7B-Instruct-v0.1"):
+def load_model(model_name="mistralai/Mistral-7B-Instruct-v0.1", device="cpu"):
     """
-    Load the llama model using TransformerLens.
+    Load the model using TransformerLens.
     
     Args:
         model_name: HuggingFace model name or path to local model
+        device: Device to load model on ("cpu" or "cuda")
     
     Returns:
         HookedTransformer: Loaded model
     """
-    print(f"Loading model: {model_name}")
+    print(f"Loading model: {model_name} on {device}")
     
     try:
         model = HookedTransformer.from_pretrained(
             model_name,
-            device="cpu",  # Start with CPU, can move to GPU later if needed
-            torch_dtype=torch.float32
+            device=device,
+            dtype=torch.float32
         )
         print(f"Successfully loaded {model_name}")
         print(f"Model config: {model.cfg}")
@@ -103,32 +107,55 @@ def analyze_prompts():
     
     print(f"\nTotal prompts: {sum(counts.values())}")
 
-def test_model_loading():
-    """Test different model loading options."""
+def test_model_loading(model_name, device):
+    """Test model loading with specific parameters."""
     print("=== MODEL LOADING TEST ===")
     
-    # Try different model names/paths
-    model_options = [
-        "mistralai/Mistral-7B-Instruct-v0.1",  # No auth required
-        "meta-llama/Meta-Llama-3.1-8B-Instruct",  # Requires auth
-        # Add local paths here if you have them
-    ]
+    print(f"Trying to load: {model_name} on {device}")
+    model = load_model(model_name, device)
+    if model is not None:
+        print("✓ Model loaded successfully!")
+        return model
+    else:
+        print("✗ Failed to load model")
+        return None
+
+def parse_args():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description="Self-referent experiment with Mistral-7B")
     
-    for model_name in model_options:
-        print(f"\nTrying to load: {model_name}")
-        model = load_model(model_name)
-        if model is not None:
-            print("✓ Model loaded successfully!")
-            return model
-        else:
-            print("✗ Failed to load model")
+    parser.add_argument("--model_id", default="mistralai/Mistral-7B-Instruct-v0.1",
+                       help="HuggingFace model ID (default: mistralai/Mistral-7B-Instruct-v0.1)")
+    parser.add_argument("--device", default="cpu", choices=["cpu", "cuda"],
+                       help="Device to run on (default: cpu)")
+    parser.add_argument("--max_tokens", type=int, default=50,
+                       help="Maximum tokens to generate (default: 50)")
+    parser.add_argument("--temperature", type=float, default=0.7,
+                       help="Sampling temperature (default: 0.7)")
+    parser.add_argument("--seed", type=int, default=123,
+                       help="Random seed for reproducibility (default: 123)")
+    parser.add_argument("--prompts_per_category", type=int, default=2,
+                       help="Number of prompts to test per category (default: 2)")
     
-    return None
+    return parser.parse_args()
 
 def main():
     """Main experiment function."""
+    args = parse_args()
+    
     print("Self-Referent Experiment Setup")
     print("=" * 40)
+    print(f"Model: {args.model_id}")
+    print(f"Device: {args.device}")
+    print(f"Seed: {args.seed}")
+    print(f"Max tokens: {args.max_tokens}")
+    print(f"Temperature: {args.temperature}")
+    print(f"Prompts per category: {args.prompts_per_category}")
+    print("=" * 40)
+    
+    # Set up determinism
+    set_seed(args.seed)
+    verify_determinism()
     
     # Initialize output manager
     output_manager = OutputManager()
@@ -137,22 +164,27 @@ def main():
     analyze_prompts()
     
     # Test model loading
-    model = test_model_loading()
+    model = test_model_loading(args.model_id, args.device)
     
     if model is not None:
         # Test basic generation
         prompts = get_all_prompts()
-        test_prompts = prompts["self_referent"][:2] + prompts["confounder"][:2] + prompts["neutral"][:2]
-        results = test_model_generation(model, test_prompts, output_manager)
+        test_prompts = (prompts["self_referent"][:args.prompts_per_category] + 
+                       prompts["confounder"][:args.prompts_per_category] + 
+                       prompts["neutral"][:args.prompts_per_category])
+        results = test_model_generation(model, test_prompts, output_manager, args.max_tokens)
         
         # Save experiment config
         config = {
-            "model_name": "mistralai/Mistral-7B-Instruct-v0.1",
+            "model_name": args.model_id,
+            "device": args.device,
+            "seed": args.seed,
+            "max_tokens": args.max_tokens,
+            "temperature": args.temperature,
+            "prompts_per_category": args.prompts_per_category,
             "total_prompts": sum(get_prompt_counts().values()),
             "prompt_counts": get_prompt_counts(),
-            "test_prompts_count": len(test_prompts),
-            "max_tokens": 50,
-            "temperature": 0.7
+            "test_prompts_count": len(test_prompts)
         }
         output_manager.save_experiment_config(config)
         
@@ -160,10 +192,11 @@ def main():
         summary = {
             "experiment_status": "Model loaded and basic generation successful",
             "results_directory": output_manager.run_dir,
+            "model_config": f"{args.model_id} on {args.device}",
             "generation_results": f"{len(results)} prompts tested",
             "next_steps": [
-                "Analyze generated responses for self-referent patterns",
-                "Set up activation patching experiments", 
+                "Run activation_analysis.py for deeper mechanistic analysis",
+                "Use analyze_results.py to examine activation differences", 
                 "Compare activations between self-referent and confounder prompts",
                 "Identify key attention heads and MLP layers"
             ]
@@ -175,12 +208,12 @@ def main():
         print("   - Model path/name is correct")
         print("   - You have access to the model")
         print("   - Sufficient disk space for model weights")
+        sys.exit(1)
     
     print(f"\n=== RESULTS SAVED TO: {output_manager.run_dir} ===")
-    print("1. Verify model is working with basic generation")
-    print("2. Set up activation patching experiments")
-    print("3. Analyze self-referent vs confounder activations")
-    print("4. Identify key attention heads and MLP layers")
+    print("Next steps:")
+    print("1. Run: python activation_analysis.py --model_id {args.model_id} --device {args.device}")
+    print("2. Run: python analyze_results.py")
 
 if __name__ == "__main__":
     main()

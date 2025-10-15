@@ -1,4 +1,6 @@
 venv/*
-venv
+venv/
 __pycache__/*
-__pycache__
+__pycache__/
+results/*
+results_activation_analysis/*

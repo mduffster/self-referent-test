@@ -1,38 +1,69 @@
-# Self-Referent Experiment with Llama-8B
+# Self-Referent Experiment with Mistral-7B
 
-This project investigates the "self-referent" paths used by Llama-8B when processing prompts that ask about itself, using TransformerLens for mechanistic interpretability.
+This project investigates the "self-referent" paths used by Mistral-7B when processing prompts that ask about itself, using TransformerLens for mechanistic interpretability.
 
 ## Project Structure
 
 ```
-├── venv/                 # Python virtual environment
 ├── requirements.txt      # Python dependencies
 ├── prompts.py           # Test prompts (self-referent, confounders, neutral)
-├── experiment.py        # Main experiment script
+├── experiment.py        # Basic text generation experiment
+├── activation_analysis.py # Advanced activation analysis
+├── analyze_results.py   # Results analysis and visualization
+├── output_manager.py    # Output file management
 └── README.md           # This file
 ```
 
+## Quick Start
+
+**One command to run everything:**
+```bash
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python experiment.py --model_id mistralai/Mistral-7B-Instruct-v0.1 --prompts_per_category 3 --max_tokens 50 --temperature 0.7 --seed 123
+```
+
+**For deeper mechanistic analysis:**
+```bash
+python activation_analysis.py --model_id mistralai/Mistral-7B-Instruct-v0.1 --prompts_per_category 5
+python analyze_results.py
+```
+
+## Hardware Requirements
+
+- **Tested on**: MacBook Pro M1/M2 (48GB RAM)
+- **Expected runtime**: ~10-15 minutes for basic experiment, ~20-30 minutes for activation analysis
+- **CPU-only**: Works fine but slower than GPU
+- **Memory**: ~16GB RAM needed for Mistral-7B model loading
+
 ## Setup
 
-1. **Activate the virtual environment:**
+1. **Create and activate virtual environment:**
    ```bash
-   source venv/bin/activate
+   python -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
-2. **Verify installation:**
+2. **Install dependencies:**
    ```bash
-   python -c "import torch; import transformer_lens; print('Setup complete!')"
+   pip install -r requirements.txt
+   ```
+
+3. **Verify installation:**
+   ```bash
+   python -c "import torch, transformer_lens, transformers; print('✓ Setup complete!')"
    ```
 
 ## Running the Experiment
 
 ```bash
-python experiment.py
+python experiment.py --help  # See all options
+python experiment.py --model_id mistralai/Mistral-7B-Instruct-v0.1 --prompts_per_category 3
 ```
 
 This will:
 - Load the Mistral-7B model using TransformerLens
-- Test basic text generation
+- Test basic text generation with configurable parameters
 - Run initial experiments with the prompt categories
 
 ## Prompt Categories
