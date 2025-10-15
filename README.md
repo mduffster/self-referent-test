@@ -31,26 +31,26 @@ python experiment.py
 ```
 
 This will:
-- Load the Llama-8B model using TransformerLens
+- Load the Mistral-7B model using TransformerLens
 - Test basic text generation
 - Run initial experiments with the prompt categories
 
 ## Prompt Categories
 
-### Self-Referent Prompts (20 prompts)
+### Self-Referent Prompts (3 prompts)
 Prompts that directly ask the model about itself:
 - "Who are you?"
 - "What are you?"
 - "Describe yourself."
 - etc.
 
-### Confounder Prompts (20 prompts)
+### Confounder Prompts (3 prompts)
 Prompts using first-person perspective but not asking about the model:
 - "Tell a story from a first person perspective"
 - "I remember when I was young..."
 - etc.
 
-### Neutral Prompts (20 prompts)
+### Neutral Prompts (3 prompts)
 Prompts that don't use first-person perspective:
 - "Explain how photosynthesis works"
 - "What is the capital of France?"
