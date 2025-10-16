@@ -169,7 +169,7 @@ Third-person perspective for control comparison:
 *Identifies specific attention heads that are most sensitive to role-conditioning. Red regions indicate heads where self-referent prompts show different attention patterns compared to neutral/confounder prompts.*
 
 ### Role-Sensitive Head Distributions
-![Distribution Plots](figures/visualization_4_distributions.png)
+![Distribution Plots](figures/visualization_4_distributions.png?v=2)
 *Violin plots showing attention entropy distributions for the most role-sensitive heads across all four categories. Large negative Cohen's d values indicate self-referent prompts produce significantly more focused attention patterns compared to confounder and third-person prompts.*
 
 ### Layer-wise Role-Conditioning Effects
