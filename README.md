@@ -105,7 +105,7 @@ No first-person perspective:
 
 ### Layer-wise Attention Entropy Patterns
 ![Layer-wise Attention Entropy](figures/visualization_1_layer_attention_lines.png)
-*Shows attention entropy progression across all 32 layers with 95% confidence intervals. Self-referent prompts (red) consistently show lower entropy (more focused attention) compared to neutral (blue) and confounder (green) prompts.*
+*Shows attention entropy progression across all 32 layers with 95% confidence intervals. Self-referent prompts (red) and neutral (blue) consistently show lower entropy (more focused attention) compared to confounder (green) prompts.*
 
 ### Head-wise Role Sensitivity Heatmaps
 ![Head-wise Δ-Heatmaps](figures/visualization_2_heatmaps.png)
@@ -121,7 +121,7 @@ No first-person perspective:
 
 ### Role-Focus & Separation Indices
 ![Role-Focus & Separation Indices](figures/visualization_9_role_focus_separation.png)
-*RFC and RSI metrics with confidence intervals. RFC measures how much more focused self-referent attention is compared to neutral, while RSI measures the separation between confounder and self-referent patterns.*
+*Proposed RFC and RSI metrics with confidence intervals. RFC measures how much more focused self-referent attention is compared to neutral, while RSI measures the separation between confounder and self-referent patterns.*
 
 ### Key Metrics
 - **Attention Entropy**: Measures focus vs. distributed attention
