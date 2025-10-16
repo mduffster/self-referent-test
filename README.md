@@ -9,10 +9,10 @@ This project investigates role-conditioning circuits in Mistral-7B using mechani
 **Metrics for Base vs Instruct RFC and RFI** 
 [[See Metrics](https://github.com/mduffster/self-referent-test?tab=readme-ov-file#key-metrics)]
 
-RFC differences: Mean -0.0917 (instruct shows systematically lower role-focus throughout the circuit)
-RSI differences: Mean -0.0296 (likely too noisy to be a standard metric)
-19/32 layers show significant RFC differences
-12/32 layers show significant RSI differences
+- RFC differences: Mean -0.0917 (instruct shows systematically lower role-focus throughout the circuit)
+- RSI differences: Mean -0.0296 (likely too noisy to be a standard metric)
+- 19/32 layers show significant RFC differences
+- 12/32 layers show significant RSI differences
 
 ## Research Hypothesis
 
