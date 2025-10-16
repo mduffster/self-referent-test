@@ -36,8 +36,8 @@ pip install -r requirements.txt
 
 **2. Run Activation Analysis:**
 ```bash
-# Run with 10 prompts per category (recommended)
-python activation_analysis.py --prompts_per_category 10
+# Run with 20 prompts per category (recommended)
+python activation_analysis.py --prompts_per_category 20
 
 # Or with custom parameters
 python activation_analysis.py --model_id mistralai/Mistral-7B-Instruct-v0.1 --prompts_per_category 20 --device cpu --seed 123
