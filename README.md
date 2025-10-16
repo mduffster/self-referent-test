@@ -161,7 +161,7 @@ Third-person perspective for control comparison:
 ## Sample Visualizations
 
 ### Layer-wise Attention Entropy Patterns
-![Layer-wise Attention Entropy](figures/visualization_1_layer_attention_lines.png)
+![Layer-wise Attention Entropy](figures/visualization_1_layer_attention_lines.png?v=2)
 *Shows attention entropy progression across all 32 layers with 95% confidence intervals. Self-referent prompts (red) and neutral (blue) consistently show lower entropy (more focused attention) compared to confounder (green) prompts and third person (magenta) prompts.*
 
 ### Head-wise Role Sensitivity Heatmaps
