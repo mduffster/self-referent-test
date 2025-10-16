@@ -161,23 +161,23 @@ Third-person perspective for control comparison:
 ## Sample Visualizations
 
 ### Layer-wise Attention Entropy Patterns
-![Layer-wise Attention Entropy](https://raw.githubusercontent.com/mattduffy/self-referent-test/master/figures/visualization_1_layer_attention_lines.png)
+![Layer-wise Attention Entropy](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_1_layer_attention_lines.png)
 *Shows attention entropy progression across all 32 layers with 95% confidence intervals. Self-referent prompts (red) and neutral (blue) consistently show lower entropy (more focused attention) compared to confounder (green) prompts and third person (magenta) prompts.*
 
 ### Head-wise Role Sensitivity Heatmaps
-![Head-wise Δ-Heatmaps](figures/visualization_2_heatmaps.png)
+![Head-wise Δ-Heatmaps](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_2_heatmaps.png)
 *Identifies specific attention heads that are most sensitive to role-conditioning. Red regions indicate heads where self-referent prompts show different attention patterns compared to neutral/confounder prompts.*
 
 ### Role-Sensitive Head Distributions
-![Distribution Plots](https://raw.githubusercontent.com/mattduffy/self-referent-test/master/figures/visualization_4_distributions.png)
+![Distribution Plots](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_4_distributions.png)
 *Violin plots showing attention entropy distributions for the most role-sensitive heads across all four categories. Large negative Cohen's d values indicate self-referent prompts produce significantly more focused attention patterns compared to confounder and third-person prompts.*
 
 ### Layer-wise Role-Conditioning Effects
-![Δ-Bar Summary](figures/visualization_5_delta_bar_summary.png)
+![Δ-Bar Summary](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_5_delta_bar_summary.png)
 *Quantitative summary showing layer-wise differences between conditions. Positive values indicate self-referent prompts have more focused attention (lower entropy) than confounder/neutral prompts.*
 
 ### Role-Focus & Separation Indices
-![Role-Focus & Separation Indices](figures/visualization_9_role_focus_separation.png)
+![Role-Focus & Separation Indices](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_9_role_focus_separation.png)
 *Proposed RFC and RSI metrics with confidence intervals. RFC measures how much more focused self-referent attention is compared to neutral, while RSI measures the separation between confounder and self-referent patterns.*
 
 ### Key Metrics
