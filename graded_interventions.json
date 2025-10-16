@@ -1,0 +1,72 @@
+[
+  {
+    "name": "sh_0_19_half",
+    "type": "attention",
+    "layer": 0,
+    "head": 19,
+    "method": "half_out"
+  },
+  {
+    "name": "sh_0_19_zero",
+    "type": "attention",
+    "layer": 0,
+    "head": 19,
+    "method": "zero_out"
+  },
+  {
+    "name": "sh_18_5_half",
+    "type": "attention",
+    "layer": 18,
+    "head": 5,
+    "method": "half_out"
+  },
+  {
+    "name": "sh_18_5_zero",
+    "type": "attention",
+    "layer": 18,
+    "head": 5,
+    "method": "zero_out"
+  },
+  {
+    "name": "sh_8_5_half",
+    "type": "attention",
+    "layer": 8,
+    "head": 5,
+    "method": "half_out"
+  },
+  {
+    "name": "sh_8_5_zero",
+    "type": "attention",
+    "layer": 8,
+    "head": 5,
+    "method": "zero_out"
+  },
+  {
+    "name": "sh_31_2_half",
+    "type": "attention",
+    "layer": 31,
+    "head": 2,
+    "method": "half_out"
+  },
+  {
+    "name": "sh_31_2_zero",
+    "type": "attention",
+    "layer": 31,
+    "head": 2,
+    "method": "zero_out"
+  },
+  {
+    "name": "sh_18_28_half",
+    "type": "attention",
+    "layer": 18,
+    "head": 28,
+    "method": "half_out"
+  },
+  {
+    "name": "sh_18_28_zero",
+    "type": "attention",
+    "layer": 18,
+    "head": 28,
+    "method": "zero_out"
+  }
+]

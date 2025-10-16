@@ -1,0 +1,97 @@
+[
+  {
+    "name": "top_self_referent_heads",
+    "description": "Top 5 most role-sensitive heads (strong self-referent effects)",
+    "interventions": [
+      {
+        "name": "sh_0_19_zero",
+        "type": "attention",
+        "layer": 0,
+        "head": 19,
+        "method": "zero_out"
+      },
+      {
+        "name": "sh_18_5_zero", 
+        "type": "attention",
+        "layer": 18,
+        "head": 5,
+        "method": "zero_out"
+      },
+      {
+        "name": "sh_8_5_zero",
+        "type": "attention", 
+        "layer": 8,
+        "head": 5,
+        "method": "zero_out"
+      },
+      {
+        "name": "sh_31_2_zero",
+        "type": "attention",
+        "layer": 31,
+        "head": 2,
+        "method": "zero_out"
+      },
+      {
+        "name": "sh_18_28_zero",
+        "type": "attention",
+        "layer": 18,
+        "head": 28,
+        "method": "zero_out"
+      }
+    ]
+  },
+  {
+    "name": "confounder_sensitive_heads",
+    "description": "Heads that show strong confounder effects",
+    "interventions": [
+      {
+        "name": "sh_2_11_zero",
+        "type": "attention",
+        "layer": 2,
+        "head": 11,
+        "method": "zero_out"
+      },
+      {
+        "name": "sh_26_30_zero",
+        "type": "attention", 
+        "layer": 26,
+        "head": 30,
+        "method": "zero_out"
+      },
+      {
+        "name": "sh_4_10_zero",
+        "type": "attention",
+        "layer": 4,
+        "head": 10,
+        "method": "zero_out"
+      }
+    ]
+  },
+  {
+    "name": "intervention_methods_comparison",
+    "description": "Compare different intervention methods on the same head",
+    "interventions": [
+      {
+        "name": "sh_0_19_zero",
+        "type": "attention",
+        "layer": 0,
+        "head": 19,
+        "method": "zero_out"
+      },
+      {
+        "name": "sh_0_19_random",
+        "type": "attention",
+        "layer": 0,
+        "head": 19,
+        "method": "random"
+      },
+      {
+        "name": "sh_0_19_uniform",
+        "type": "attention",
+        "layer": 0,
+        "head": 19,
+        "method": "uniform"
+      }
+    ]
+  }
+]
