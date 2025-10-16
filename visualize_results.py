@@ -14,12 +14,12 @@ Follows the structure: 1. Libraries, 2. Data Load, 3. Calculations, 4. Visualiza
 import json
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 import seaborn as sns
 from pathlib import Path
 import torch
-import transformer_lens
-from transformer_lens import HookedTransformer
 from typing import Dict, List, Tuple
 import glob
 import os
@@ -41,18 +41,17 @@ print("\n" + "="*60)
 print("DATA LOADING AND SUMMARY")
 print("="*60)
 
-# Load model for analysis
-print("Loading model...")
-model = HookedTransformer.from_pretrained("mistralai/Mistral-7B-Instruct-v0.1", device="cpu")
-n_layers = model.cfg.n_layers
-n_heads = model.cfg.n_heads
+# Model configuration (Mistral-7B-Instruct-v0.1)
+print("Using Mistral-7B configuration...")
+n_layers = 32
+n_heads = 32
 print(f"Model: {n_layers} layers, {n_heads} heads per layer")
 
 # Load raw activation data from NPZ files
 print("\nLoading raw activation data from NPZ files...")
 
 # Find NPZ files
-npz_files = glob.glob("results_activation_analysis/run_20251015_130649/raw_*.npz")
+npz_files = glob.glob("results_activation_analysis/run_20251015_200918/raw_*.npz")
 print(f"Found {len(npz_files)} NPZ files")
 
 # Load all activation data and compute within-block averages
@@ -187,11 +186,11 @@ print(f"✓ Layer-wise statistics computed for {len(layer_stats)} layers")
 # Compute head-wise differences for heatmaps
 print("Computing head-wise attention differences...")
 
-head_diffs_self_neutral = np.zeros((32, 32))  # layers x heads
-head_diffs_self_confounder = np.zeros((32, 32))
+head_diffs_self_neutral = np.zeros((n_layers, n_heads))  # layers x heads
+head_diffs_self_confounder = np.zeros((n_layers, n_heads))
 
-for layer in range(32):
-    npz_file = f'results_activation_analysis/run_20251015_130649/raw_blocks_{layer}_attn_pattern.npz'
+for layer in range(n_layers):
+    npz_file = f'results_activation_analysis/run_20251015_170837/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -204,7 +203,7 @@ for layer in range(32):
         
         if self_acts and neutral_acts and confounder_acts:
             # Calculate mean attention magnitude per head for each category
-            self_head_means = np.mean([np.mean(np.abs(act), axis=(2,3)) for act in self_acts], axis=0)[0]  # (32,)
+            self_head_means = np.mean([np.mean(np.abs(act), axis=(2,3)) for act in self_acts], axis=0)[0]  # (n_heads,)
             neutral_head_means = np.mean([np.mean(np.abs(act), axis=(2,3)) for act in neutral_acts], axis=0)[0]
             confounder_head_means = np.mean([np.mean(np.abs(act), axis=(2,3)) for act in confounder_acts], axis=0)[0]
             
@@ -214,8 +213,8 @@ for layer in range(32):
 
 # Find top role-sensitive heads
 top_heads = []
-for layer in range(32):
-    for head in range(32):
+for layer in range(n_layers):
+    for head in range(n_heads):
         top_heads.append((layer, head, head_diffs_self_neutral[layer, head]))
 
 top_heads.sort(key=lambda x: x[2], reverse=True)
@@ -257,7 +256,9 @@ ax.set_title('Layer-wise Attention Entropy: Role-Conditioning Circuits')
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.show()
+plt.savefig('figures/visualization_1_layer_attention_lines.png', dpi=150, bbox_inches='tight')
+plt.close()
+print("  Saved: figures/visualization_1_layer_attention_lines.png")
 
 print(f"✓ Visualization 1 complete: {len(layer_stats)} layers analyzed")
 
@@ -289,7 +290,9 @@ ax2.set_yticks(range(0, 32, 4))
 plt.colorbar(im2, ax=ax2)
 
 plt.tight_layout()
-plt.show()
+plt.savefig('figures/visualization_2_heatmaps.png', dpi=150, bbox_inches='tight')
+plt.close()
+print("  Saved: figures/visualization_2_heatmaps.png")
 
 # Find and annotate top role-sensitive heads
 print("\nTop 10 Role-Sensitive Heads (Self - Neutral):")
@@ -308,7 +311,10 @@ print("\nCreating Visualization 3: Token-Conditioned Attention Map...")
 token_attention_data = []
 key_layers = [0, 5, 10, 15, 20, 25, 30, 31]  # Selected layers for clarity
 
-for layer in key_layers:
+print(f"Processing {len(key_layers)} key layers for token attention analysis...")
+
+for i, layer in enumerate(key_layers):
+    print(f"  Processing layer {layer} ({i+1}/{len(key_layers)})...")
     npz_file = f'results_activation_analysis/run_20251015_130649/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
@@ -321,11 +327,13 @@ for layer in key_layers:
         confounder_acts = [act for act, cat in zip(activations, categories) if cat == 'confounder' and act is not None]
         
         if self_acts and neutral_acts and confounder_acts:
+            print(f"    Computing attention patterns for {len(self_acts)} self, {len(neutral_acts)} neutral, {len(confounder_acts)} confounder activations...")
             # Calculate attention to first 3 tokens (positions 0, 1, 2)
             # For self-referent (5 tokens), neutral/confounder (9 tokens)
             self_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in self_acts], axis=0)  # (32 heads,)
             neutral_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in neutral_acts], axis=0)
             confounder_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in confounder_acts], axis=0)
+            print(f"    ✓ Layer {layer} processed")
             
             token_attention_data.append({
                 'layer': layer,
@@ -355,7 +363,9 @@ for i, data in enumerate(token_attention_data):
 
 plt.suptitle('Token-Conditioned Attention Patterns: Role-Sensitive Heads', fontsize=14)
 plt.tight_layout()
-plt.show()
+plt.savefig('figures/visualization_3_token_attention.png', dpi=150, bbox_inches='tight')
+plt.close()
+print("  Saved: figures/visualization_3_token_attention.png")
 
 print(f"✓ Visualization 3 complete: {len(token_attention_data)} layers analyzed")
 
@@ -373,7 +383,7 @@ violin_data = []
 effect_sizes = []
 
 for layer, head in top_role_heads:
-    npz_file = f'results_activation_analysis/run_20251015_130649/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'results_activation_analysis/run_20251015_170837/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -385,10 +395,42 @@ for layer, head in top_role_heads:
         confounder_acts = [act for act, cat in zip(activations, categories) if cat == 'confounder' and act is not None]
         
         if self_acts and neutral_acts and confounder_acts:
-            # Calculate attention magnitude for this specific head across all prompts
-            self_values = [np.mean(np.abs(act[0, head, :, :])) for act in self_acts]
-            neutral_values = [np.mean(np.abs(act[0, head, :, :])) for act in neutral_acts]
-            confounder_values = [np.mean(np.abs(act[0, head, :, :])) for act in confounder_acts]
+            # Calculate attention entropy for this specific head across all prompts
+            self_values = []
+            for act in self_acts:
+                head_attn = act[0, head, :, :]  # (seq_len, seq_len)
+                entropies = []
+                for query_pos in range(head_attn.shape[0]):
+                    attn_dist = head_attn[query_pos, :]  # Attention distribution for this query
+                    attn_dist = attn_dist + 1e-8  # Avoid log(0)
+                    attn_dist = attn_dist / attn_dist.sum()  # Renormalize
+                    entropy = -np.sum(attn_dist * np.log(attn_dist))
+                    entropies.append(entropy)
+                self_values.append(np.mean(entropies))
+            
+            neutral_values = []
+            for act in neutral_acts:
+                head_attn = act[0, head, :, :]
+                entropies = []
+                for query_pos in range(head_attn.shape[0]):
+                    attn_dist = head_attn[query_pos, :]
+                    attn_dist = attn_dist + 1e-8
+                    attn_dist = attn_dist / attn_dist.sum()
+                    entropy = -np.sum(attn_dist * np.log(attn_dist))
+                    entropies.append(entropy)
+                neutral_values.append(np.mean(entropies))
+                
+            confounder_values = []
+            for act in confounder_acts:
+                head_attn = act[0, head, :, :]
+                entropies = []
+                for query_pos in range(head_attn.shape[0]):
+                    attn_dist = head_attn[query_pos, :]
+                    attn_dist = attn_dist + 1e-8
+                    attn_dist = attn_dist / attn_dist.sum()
+                    entropy = -np.sum(attn_dist * np.log(attn_dist))
+                    entropies.append(entropy)
+                confounder_values.append(np.mean(entropies))
             
             violin_data.append({
                 'layer': layer,
@@ -404,6 +446,7 @@ for layer, head in top_role_heads:
             pooled_std = np.sqrt((self_std**2 + neutral_std**2) / 2)
             cohens_d = (self_mean - neutral_mean) / pooled_std if pooled_std > 0 else 0
             
+            print(f"    Layer {layer}, Head {head}: self_mean={self_mean:.4f}, neutral_mean={neutral_mean:.4f}, cohens_d={cohens_d:.3f}")
             effect_sizes.append(cohens_d)
 
 # Create violin plots
@@ -424,13 +467,15 @@ for i, data in enumerate(violin_data):
     
     ax.set_xticks([1, 2, 3])
     ax.set_xticklabels(['Self', 'Neutral', 'Confounder'])
-    ax.set_ylabel('Attention Magnitude')
+    ax.set_ylabel('Attention Entropy')
     ax.set_title(f'Layer {data["layer"]}, Head {data["head"]}\nCohen\'s d = {effect_sizes[i]:.3f}')
     ax.grid(True, alpha=0.3)
 
-plt.suptitle('Distribution of Attention Magnitudes: Role-Sensitive Heads', fontsize=14)
+plt.suptitle('Distribution of Attention Entropies: Role-Sensitive Heads', fontsize=14)
 plt.tight_layout()
-plt.show()
+plt.savefig('figures/visualization_4_distributions.png', dpi=150, bbox_inches='tight')
+plt.close()
+print("  Saved: figures/visualization_4_distributions.png")
 
 # Print effect sizes summary
 print("\nEffect Sizes (Cohen's d: Self vs Neutral):")
@@ -439,6 +484,229 @@ for i, (data, effect_size) in enumerate(zip(violin_data, effect_sizes)):
     print(f"  Layer {data['layer']}, Head {data['head']}: d = {effect_size:.3f} ({interpretation})")
 
 print(f"✓ Visualization 4 complete: {len(violin_data)} heads analyzed")
+
+# -----------------------------------------------------------------------------
+# Visualization 5: Δ-Bar Summary Per Layer (Self - Confounder)
+# -----------------------------------------------------------------------------
+
+print("\nCreating Visualization 5: Δ-Bar Summary Per Layer...")
+
+# Compute Δ values for each layer
+layer_deltas_conf = []  # Confounder - Self
+layer_deltas_neut = []  # Neutral - Self
+layer_labels = []
+
+for layer in sorted(df['layer'].unique()):
+    layer_df = df[df['layer'] == layer]
+    
+    # Get mean entropy for each category
+    self_mean = layer_df[layer_df['category'] == 'self_referent']['avg_entropy'].mean()
+    confounder_mean = layer_df[layer_df['category'] == 'confounder']['avg_entropy'].mean()
+    neutral_mean = layer_df[layer_df['category'] == 'neutral']['avg_entropy'].mean()
+    
+    delta_conf = confounder_mean - self_mean  # Positive = self has lower entropy (more focused)
+    delta_neut = neutral_mean - self_mean     # Positive = self has lower entropy (more focused)
+    
+    layer_deltas_conf.append(delta_conf)
+    layer_deltas_neut.append(delta_neut)
+    layer_labels.append(f"L{layer}")
+
+# Create the plot with two bars per layer
+fig, ax = plt.subplots(1, 1, figsize=(16, 6))
+
+x = np.arange(len(layer_labels))
+width = 0.35
+
+# Create bars
+bars1 = ax.bar(x - width/2, layer_deltas_conf, width, label='Confounder - Self', color='red', alpha=0.7)
+bars2 = ax.bar(x + width/2, layer_deltas_neut, width, label='Neutral - Self', color='blue', alpha=0.7)
+
+ax.set_xlabel('Layer')
+ax.set_ylabel('Δ (Attention Entropy)')
+ax.set_title('Layer-wise Role-Conditioning Effect\n(Positive = Self-referent has lower entropy = more focused attention)')
+ax.set_xticks(x)
+ax.set_xticklabels(layer_labels, rotation=45)
+ax.axhline(y=0, color='black', linestyle='-', alpha=0.3)
+ax.legend()
+ax.grid(True, alpha=0.3)
+
+# Add value labels on bars
+for bars, deltas in [(bars1, layer_deltas_conf), (bars2, layer_deltas_neut)]:
+    for bar, delta in zip(bars, deltas):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height + (0.01 if height >= 0 else -0.01),
+                f'{delta:.3f}', ha='center', va='bottom' if height >= 0 else 'top', fontsize=8)
+
+plt.tight_layout()
+plt.savefig('figures/visualization_5_delta_bar_summary.png', dpi=150, bbox_inches='tight')
+plt.close()
+print("  Saved: figures/visualization_5_delta_bar_summary.png")
+
+print(f"✓ Visualization 5 complete: {len(layer_deltas_conf)} layers analyzed")
+
+# -----------------------------------------------------------------------------
+# Visualization 6: Top-K Head Ranking Per Layer
+# -----------------------------------------------------------------------------
+
+print("\nCreating Visualization 6: Top-K Head Ranking Per Layer...")
+
+# For each layer, find top 3 heads with largest |Self - Confounder|
+top_heads_per_layer = []
+
+for layer in range(n_layers):
+    layer_heads = []
+    npz_file = f'results_activation_analysis/run_20251015_170837/raw_blocks_{layer}_attn_pattern.npz'
+    if os.path.exists(npz_file):
+        data = np.load(npz_file, allow_pickle=True)
+        activations = data['activations']
+        categories = data['categories']
+        
+        # Separate by category
+        self_acts = [act for act, cat in zip(activations, categories) if cat == 'self_referent' and act is not None]
+        confounder_acts = [act for act, cat in zip(activations, categories) if cat == 'confounder' and act is not None]
+        
+        if self_acts and confounder_acts:
+            # Calculate mean attention entropy per head for each category
+            def calculate_head_entropies(activations):
+                head_entropies = []
+                for act in activations:
+                    per_head_entropies = []
+                    for head in range(act.shape[1]):
+                        head_attn = act[0, head, :, :]
+                        entropies = []
+                        for query_pos in range(head_attn.shape[0]):
+                            attn_dist = head_attn[query_pos, :] + 1e-8
+                            attn_dist = attn_dist / attn_dist.sum()
+                            entropy = -np.sum(attn_dist * np.log(attn_dist))
+                            entropies.append(entropy)
+                        per_head_entropies.append(np.mean(entropies))
+                    head_entropies.append(per_head_entropies)
+                return np.mean(head_entropies, axis=0)
+            
+            self_head_means = calculate_head_entropies(self_acts)
+            confounder_head_means = calculate_head_entropies(confounder_acts)
+            
+            # Calculate differences and find top 3
+            head_diffs = np.abs(self_head_means - confounder_head_means)
+            top_3_indices = np.argsort(head_diffs)[-3:]
+            
+            for head_idx in top_3_indices:
+                top_heads_per_layer.append({
+                    'layer': layer,
+                    'head': head_idx,
+                    'delta': self_head_means[head_idx] - confounder_head_means[head_idx],
+                    'abs_delta': head_diffs[head_idx]
+                })
+
+# Create scatter plot
+fig, ax = plt.subplots(1, 1, figsize=(12, 8))
+
+layers = [h['layer'] for h in top_heads_per_layer]
+heads = [h['head'] for h in top_heads_per_layer]
+deltas = [h['delta'] for h in top_heads_per_layer]
+abs_deltas = [h['abs_delta'] for h in top_heads_per_layer]
+
+# Color points by delta value
+scatter = ax.scatter(layers, heads, c=deltas, s=100, alpha=0.7, cmap='RdBu_r', edgecolors='black')
+
+# Add colorbar
+cbar = plt.colorbar(scatter, ax=ax)
+cbar.set_label('Δ = Self - Confounder')
+
+ax.set_xlabel('Layer')
+ax.set_ylabel('Head')
+ax.set_title('Top-3 Most Role-Sensitive Heads Per Layer\n(Size ∝ |Δ|, Color ∝ Δ)')
+ax.set_xticks(range(0, n_layers, 4))
+ax.set_yticks(range(0, n_heads, 4))
+ax.grid(True, alpha=0.3)
+
+# Add text annotations for the most extreme cases
+for i, (layer, head, delta, abs_delta) in enumerate(zip(layers, heads, deltas, abs_deltas)):
+    if abs_delta > np.percentile(abs_deltas, 90):  # Top 10% most extreme
+        ax.annotate(f'{layer}.{head}', (layer, head), xytext=(5, 5), 
+                   textcoords='offset points', fontsize=8, alpha=0.8)
+
+plt.tight_layout()
+plt.savefig('figures/visualization_6_top_k_head_ranking.png', dpi=150, bbox_inches='tight')
+plt.close()
+print("  Saved: figures/visualization_6_top_k_head_ranking.png")
+
+print(f"✓ Visualization 6 complete: {len(top_heads_per_layer)} role-sensitive heads identified")
+
+# -----------------------------------------------------------------------------
+# Visualization 7: Cross-Token Control (First 3 vs Last 3 Tokens)
+# -----------------------------------------------------------------------------
+
+print("\nCreating Visualization 7: Cross-Token Control Analysis...")
+
+# Analyze attention to first 3 tokens vs last 3 tokens
+token_control_data = []
+key_layers = [0, 5, 10, 15, 20, 25, 30, 31]
+
+for layer in key_layers:
+    npz_file = f'results_activation_analysis/run_20251015_170837/raw_blocks_{layer}_attn_pattern.npz'
+    if os.path.exists(npz_file):
+        data = np.load(npz_file, allow_pickle=True)
+        activations = data['activations']
+        categories = data['categories']
+        
+        # Separate by category
+        self_acts = [act for act, cat in zip(activations, categories) if cat == 'self_referent' and act is not None]
+        neutral_acts = [act for act, cat in zip(activations, categories) if cat == 'neutral' and act is not None]
+        
+        if self_acts and neutral_acts:
+            # Calculate attention to first 3 tokens
+            self_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in self_acts], axis=0)
+            neutral_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in neutral_acts], axis=0)
+            
+            # Calculate attention to last 3 tokens (assuming 9 token sequences)
+            self_last3 = np.mean([np.mean(act[0, :, 1:, -3:], axis=(1,2)) for act in self_acts], axis=0)
+            neutral_last3 = np.mean([np.mean(act[0, :, 1:, -3:], axis=(1,2)) for act in neutral_acts], axis=0)
+            
+            token_control_data.append({
+                'layer': layer,
+                'self_first3': self_first3,
+                'neutral_first3': neutral_first3,
+                'self_last3': self_last3,
+                'neutral_last3': neutral_last3,
+                'first3_diff': np.mean(self_first3 - neutral_first3),
+                'last3_diff': np.mean(self_last3 - neutral_last3)
+            })
+
+# Create comparison plot
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
+
+layers = [d['layer'] for d in token_control_data]
+first3_diffs = [d['first3_diff'] for d in token_control_data]
+last3_diffs = [d['last3_diff'] for d in token_control_data]
+
+# First 3 tokens
+ax1.bar(range(len(layers)), first3_diffs, color='red', alpha=0.7)
+ax1.set_xlabel('Layer')
+ax1.set_ylabel('Δ = Self - Neutral')
+ax1.set_title('Attention to First 3 Tokens')
+ax1.set_xticks(range(len(layers)))
+ax1.set_xticklabels([f'L{l}' for l in layers], rotation=45)
+ax1.axhline(y=0, color='black', linestyle='-', alpha=0.3)
+ax1.grid(True, alpha=0.3)
+
+# Last 3 tokens
+ax2.bar(range(len(layers)), last3_diffs, color='blue', alpha=0.7)
+ax2.set_xlabel('Layer')
+ax2.set_ylabel('Δ = Self - Neutral')
+ax2.set_title('Attention to Last 3 Tokens')
+ax2.set_xticks(range(len(layers)))
+ax2.set_xticklabels([f'L{l}' for l in layers], rotation=45)
+ax2.axhline(y=0, color='black', linestyle='-', alpha=0.3)
+ax2.grid(True, alpha=0.3)
+
+plt.suptitle('Cross-Token Control: Role-Conditioning Effect by Token Position', fontsize=14)
+plt.tight_layout()
+plt.savefig('figures/visualization_7_cross_token_control.png', dpi=150, bbox_inches='tight')
+plt.close()
+print("  Saved: figures/visualization_7_cross_token_control.png")
+
+print(f"✓ Visualization 7 complete: {len(token_control_data)} layers analyzed")
 
 # =============================================================================
 # SUMMARY
@@ -451,8 +719,12 @@ print("✓ Layer-wise attention patterns with 95% CIs")
 print("✓ Head-wise Δ-heatmaps (Self - Neutral, Self - Confounder)")
 print("✓ Token-conditioned attention patterns")
 print("✓ Distribution plots with effect sizes (Cohen's d)")
+print("✓ Δ-bar summary per layer (Self - Confounder)")
+print("✓ Top-K head ranking per layer")
+print("✓ Cross-token control analysis (first 3 vs last 3 tokens)")
 print(f"\nKey Findings:")
-print(f"- Analyzed {len(layer_stats)} layers across all 32 heads")
-print(f"- Identified {len(top_heads)} role-sensitive heads")
-print(f"- Effect sizes range from {min(effect_sizes):.3f} to {max(effect_sizes):.3f}")
+print(f"- Analyzed {len(layer_stats)} layers across all {n_heads} heads per layer")
+print(f"- Total heads analyzed: {len(top_heads)}")
+print(f"- Top role-sensitive heads identified in heatmap analysis")
+print(f"- Effect sizes for top 6 heads: {min(effect_sizes):.3f} to {max(effect_sizes):.3f}")
 print("="*60)

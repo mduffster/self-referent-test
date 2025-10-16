@@ -60,8 +60,8 @@ def test_model_generation(model, test_prompts, output_manager, max_tokens=50):
             response = model.generate(
                 prompt, 
                 max_new_tokens=max_tokens,
-                temperature=0.7,
-                do_sample=True
+                temperature=0,
+                do_sample=False
             )
             print(f"Response: {response}")
             

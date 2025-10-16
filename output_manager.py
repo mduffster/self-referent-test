@@ -12,21 +12,27 @@ import pandas as pd
 class OutputManager:
     """Manages saving experiment results to various formats."""
     
-    def __init__(self, output_dir="results"):
+    def __init__(self, output_dir="results", use_latest=False):
         """
         Initialize output manager.
         
         Args:
             output_dir: Directory to save results
+            use_latest: If True, use 'latest_run' folder instead of timestamped
         """
         self.output_dir = output_dir
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.use_latest = use_latest
         
         # Create output directory
         os.makedirs(output_dir, exist_ok=True)
         
-        # Create timestamped subdirectory
-        self.run_dir = os.path.join(output_dir, f"run_{self.timestamp}")
+        # Create subdirectory
+        if use_latest:
+            self.run_dir = os.path.join(output_dir, "latest_run")
+        else:
+            self.run_dir = os.path.join(output_dir, f"run_{self.timestamp}")
+        
         os.makedirs(self.run_dir, exist_ok=True)
         
         print(f"Output directory: {self.run_dir}")

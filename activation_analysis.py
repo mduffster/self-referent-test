@@ -297,7 +297,7 @@ def main():
     verify_determinism()
     
     # Initialize output manager
-    output_manager = OutputManager("results_activation_analysis")
+    output_manager = OutputManager("results_activation_analysis", use_latest=True)
     
     # Load model
     print("Loading model...")
