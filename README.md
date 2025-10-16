@@ -6,7 +6,7 @@
 
 This project investigates role-conditioning circuits in Mistral-7B using mechanistic interpretability to identify how the model processes self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. There are early indications that the Role Focus Coefficient (RFC) might be a good candidate for approximating role-adherence in instruction-tuned models.  
 
-**Metrics for Base vs Instruct RFC and RFI**
+**Metrics for Base vs Instruct RFC and RFI** [![Metrics](https://github.com/mduffster/self-referent-test?tab=readme-ov-file#key-metrics)]
 RFC differences: Mean -0.0917 (instruct shows systematically lower role-focus throughout the circuit)
 RSI differences: Mean -0.0296 (likely too noisy to be a standard metric)
 19/32 layers show significant RFC differences
@@ -16,7 +16,7 @@ RSI differences: Mean -0.0296 (likely too noisy to be a standard metric)
 
 **Role-specific linguistic circuits** modulate attention patterns when input context implies identity or task roles. This circuit mapping provides insights into how language models internally represent and condition on speaker/agent identity markers.
 
-**Current Findings** Indications that instruction tuned models neatly separate role-based queries from self-referential ones, and track self-reference into similar circuits as "fact-finding" neutral questions. This is potentially useful for the development of "dashboard-style" compliance metrics which can be rapidly calculated on relevant sample data. 
+**Current Findings** Indications that instruction tuned models neatly separate role-based queries from self-referential ones, and track self-reference into similar circuits as "fact-finding" neutral questions. This is potentially useful for the development of "dashboard-style" compliance metrics which can be rapidly calculated on relevant sample data. RFC appears to be a reasonable candidate for such a metric, given a controlled dataset of self-referent, neutral, and confounding prompts. 
 
 ## Project Structure
 
