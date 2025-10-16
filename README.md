@@ -4,11 +4,13 @@
 [![Reproducible](https://img.shields.io/badge/reproducible-✓-green.svg)](https://github.com/mattduffy/self-referent-test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This project investigates role-conditioning circuits in Mistral-7B using mechanistic interpretability to identify how the model processes self-referent vs. neutral vs. confounder content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior.
+This project investigates role-conditioning circuits in Mistral-7B using mechanistic interpretability to identify how the model processes self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. 
 
 ## Research Hypothesis
 
-**Role-specific linguistic circuits** modulate attention patterns when input context implies identity or task roles. This circuit mapping provides insights into how language models internally represent and condition on speaker/agent identity markers, with implications for understanding learned goal-directed behaviors.
+**Role-specific linguistic circuits** modulate attention patterns when input context implies identity or task roles. This circuit mapping provides insights into how language models internally represent and condition on speaker/agent identity markers.
+
+**Current Findings** Indications that instruction tuned models neatly separate role-based queries from self-referential ones, and track self-reference into similar circuits as "fact-finding" neutral questions. This is potentially useful for the development of "dashboard-style" compliance metrics which can be rapidly calculated on relevant sample data. 
 
 ## Project Structure
 
@@ -141,7 +143,7 @@ Third-person perspective for control comparison:
 - **Attention pattern extraction** with entropy calculations
 - **Raw data export** to NPZ files for detailed analysis
 
-### Intervention Experiments (`interventions.py`)
+### Intervention Experiments (`interventions.py`) NOT YET RUN
 - **Targeted ablation** of specific attention heads
 - **Graded interventions** (0.5 and 0.0 ablation methods)
 - **Structured output organization** by intervention type and parameters
@@ -234,15 +236,15 @@ figures/intervention/              # Intervention-specific visualizations
 └── (intervention comparison plots)
 ```
 
-## Key Findings
+## Findings
 
 The analysis typically reveals:
 - **Layer-wise progression** of role-conditioning effects
-- **Specific attention heads** that are highly sensitive to self-referent content
-- **Entropy differences** indicating more focused attention for self-referent prompts
-- **Statistical significance** with large effect sizes (Cohen's d > 1.0)
-- **Token-position specificity** showing effects are strongest for early tokens
-- **Third-person control** confirms effects are self-reference specific, not general agent-reference
+- **Specific attention heads** that are highly sensitive to role-oriented content
+- **Entropy differences** indicating more focused attention for self-referent prompts compared to other "speakers"
+- **Statistical significance** indicative, with large effect sizes (Cohen's d > 1.0)
+- **Token-position specificity** showing effects are strongest for middle layer and late layer tokens
+- **Third-person control** indicates speaker effects may be self-reference specific
 
 ## Dependencies
 
@@ -256,18 +258,17 @@ The analysis typically reveals:
 ## Future Analysis
 - Expand to other model families
 - **Ablation candidates identified:**
-   - Layer 29, Head 26: |Δ| = 0.261058 (strongest)
+   - Layer 29, Head 26: |Δ| = 0.261058
    - Layer 11, Head 2: |Δ| = 0.242495
    - Layer 26, Head 29: |Δ| = 0.225781
    - Layer 22, Head 28: |Δ| = 0.195122
    - Layer 7, Head 9: |Δ| = 0.189944
-- **Third-person controls** implemented and working
-- **Intervention experiments** ready with graded ablation (0.5 and 0.0)
+- **Intervention experiments** ready to start with graded ablation (0.5 and 0.0)
 - Generation effects analysis
 
 ## Research Applications
 
-This framework can be extended to:
+I hope this framework can be extended to:
 - **Multi-model comparisons** (GPT, Llama, etc.)
 - **Intervention studies** (attention patching, activation editing)
 - **Scaling studies** (7B → 70B → 405B parameter models)
