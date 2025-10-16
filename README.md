@@ -286,6 +286,13 @@ comparison_results/                # Base vs instruct comparison
 ## Findings
 
 The analysis typically reveals:
+- **RFC** Base ≫ 0, Instruct ≈ 0 → instruction tuning removes self-reference as a distinct attention regime (role compression).
+- **RSI** Small, early positive bump in instruct → emergence of early-layer user/assistant separation.
+- **Layer-wise** 19/32 layers show significant RFC reduction; strongest Δ in layers 2–8.
+- **Interpretation** Instruction tuning flattens self-referent processing into the factual-retrieval circuit visible as lower RFC.
+
+## Other Findings
+
 - **Layer-wise progression** of role-conditioning effects
 - **Specific attention heads** that are highly sensitive to role-oriented content
 - **Entropy differences** indicating more focused attention for self-referent prompts compared to other "speakers"
