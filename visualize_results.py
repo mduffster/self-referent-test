@@ -190,7 +190,7 @@ head_diffs_self_neutral = np.zeros((n_layers, n_heads))  # layers x heads
 head_diffs_self_confounder = np.zeros((n_layers, n_heads))
 
 for layer in range(n_layers):
-    npz_file = f'results_activation_analysis/run_20251015_170837/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -315,7 +315,7 @@ print(f"Processing {len(key_layers)} key layers for token attention analysis..."
 
 for i, layer in enumerate(key_layers):
     print(f"  Processing layer {layer} ({i+1}/{len(key_layers)})...")
-    npz_file = f'results_activation_analysis/run_20251015_130649/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -383,7 +383,7 @@ violin_data = []
 effect_sizes = []
 
 for layer, head in top_role_heads:
-    npz_file = f'results_activation_analysis/run_20251015_170837/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -555,7 +555,7 @@ top_heads_per_layer = []
 
 for layer in range(n_layers):
     layer_heads = []
-    npz_file = f'results_activation_analysis/run_20251015_170837/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -644,7 +644,7 @@ token_control_data = []
 key_layers = [0, 5, 10, 15, 20, 25, 30, 31]
 
 for layer in key_layers:
-    npz_file = f'results_activation_analysis/run_20251015_170837/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -708,6 +708,144 @@ print("  Saved: figures/visualization_7_cross_token_control.png")
 
 print(f"✓ Visualization 7 complete: {len(token_control_data)} layers analyzed")
 
+# -----------------------------------------------------------------------------
+# Visualization 8: ΔH per Layer (Confounder - Self)
+# -----------------------------------------------------------------------------
+
+print("\nCreating Visualization 8: ΔH per Layer Analysis...")
+
+# Compute ΔH_conf-self(l) = H_conf(l) - H_self(l) for each layer
+delta_h_per_layer = []
+layer_labels = []
+
+for layer in sorted(df['layer'].unique()):
+    layer_df = df[df['layer'] == layer]
+    
+    # Get mean entropy for each category
+    self_mean = layer_df[layer_df['category'] == 'self_referent']['avg_entropy'].mean()
+    confounder_mean = layer_df[layer_df['category'] == 'confounder']['avg_entropy'].mean()
+    
+    delta_h = confounder_mean - self_mean  # H_conf(l) - H_self(l)
+    delta_h_per_layer.append(delta_h)
+    layer_labels.append(f"L{layer}")
+
+# Create the plot
+fig, ax = plt.subplots(1, 1, figsize=(14, 6))
+
+bars = ax.bar(range(len(delta_h_per_layer)), delta_h_per_layer, color='steelblue', alpha=0.7)
+
+# Color bars based on whether delta is positive or negative
+for i, (bar, delta) in enumerate(zip(bars, delta_h_per_layer)):
+    if delta > 0:
+        bar.set_color('red')  # Positive = confounder has higher entropy
+        bar.set_alpha(0.7)
+    else:
+        bar.set_color('blue')  # Negative = self has higher entropy
+        bar.set_alpha(0.7)
+
+ax.set_xlabel('Layer')
+ax.set_ylabel('ΔH = H_confounder - H_self (Attention Entropy)')
+ax.set_title('Layer-wise Entropy Difference: Confounder vs Self-Referent\n(Expected: Positive band growing through mid/late layers)')
+ax.set_xticks(range(len(layer_labels)))
+ax.set_xticklabels(layer_labels, rotation=45)
+ax.axhline(y=0, color='black', linestyle='-', alpha=0.3)
+ax.grid(True, alpha=0.3)
+
+# Add value labels on bars
+for i, (bar, delta) in enumerate(zip(bars, delta_h_per_layer)):
+    height = bar.get_height()
+    ax.text(bar.get_x() + bar.get_width()/2., height + (0.005 if height >= 0 else -0.005),
+            f'{delta:.3f}', ha='center', va='bottom' if height >= 0 else 'top', fontsize=8)
+
+plt.tight_layout()
+plt.savefig('figures/visualization_8_delta_h_per_layer.png', dpi=150, bbox_inches='tight')
+plt.close()
+print("  Saved: figures/visualization_8_delta_h_per_layer.png")
+
+print(f"✓ Visualization 8 complete: {len(delta_h_per_layer)} layers analyzed")
+
+# -----------------------------------------------------------------------------
+# Visualization 9: Role-Focus & Separation Indices
+# -----------------------------------------------------------------------------
+
+print("\nCreating Visualization 9: Role-Focus & Separation Indices...")
+
+# Compute RFC and RSI for each layer
+rfc_values = []  # Role-Focus Coefficient
+rsi_values = []  # Role-Separation Index
+rfc_cis = []     # Confidence intervals for RFC
+rsi_cis = []     # Confidence intervals for RSI
+layer_labels = []
+
+for layer in sorted(df['layer'].unique()):
+    layer_df = df[df['layer'] == layer]
+    
+    # Get entropy values for each category
+    self_entropies = layer_df[layer_df['category'] == 'self_referent']['avg_entropy']
+    neutral_entropies = layer_df[layer_df['category'] == 'neutral']['avg_entropy']
+    confounder_entropies = layer_df[layer_df['category'] == 'confounder']['avg_entropy']
+    
+    # Calculate RFC = 1 - H_self(l) / H_neutral(l)
+    rfc_layer = 1 - (self_entropies.mean() / neutral_entropies.mean())
+    rfc_values.append(rfc_layer)
+    
+    # Calculate RSI = (H_conf(l) - H_self(l)) / H_neutral(l)
+    rsi_layer = (confounder_entropies.mean() - self_entropies.mean()) / neutral_entropies.mean()
+    rsi_values.append(rsi_layer)
+    
+    # Calculate confidence intervals
+    rfc_ci = stats.t.interval(0.95, len(self_entropies)-1, loc=rfc_layer, scale=stats.sem([1 - (s/n) for s, n in zip(self_entropies, neutral_entropies)]))
+    rsi_ci = stats.t.interval(0.95, len(self_entropies)-1, loc=rsi_layer, scale=stats.sem([(c-s)/n for c, s, n in zip(confounder_entropies, self_entropies, neutral_entropies)]))
+    
+    rfc_cis.append(rfc_ci)
+    rsi_cis.append(rsi_ci)
+    layer_labels.append(f"L{layer}")
+
+# Create subplots
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10))
+
+# RFC plot
+x = np.arange(len(layer_labels))
+bars1 = ax1.bar(x, rfc_values, color='green', alpha=0.7, label='RFC')
+ax1.set_xlabel('Layer')
+ax1.set_ylabel('Role-Focus Coefficient (RFC)')
+ax1.set_title('Role-Focus Coefficient: RFC(l) = 1 - H_self(l) / H_neutral(l)')
+ax1.set_xticks(x)
+ax1.set_xticklabels(layer_labels, rotation=45)
+ax1.grid(True, alpha=0.3)
+ax1.legend()
+
+# Add confidence intervals for RFC
+for i, (bar, ci) in enumerate(zip(bars1, rfc_cis)):
+    height = bar.get_height()
+    ax1.errorbar(bar.get_x() + bar.get_width()/2., height, 
+                yerr=[[height - ci[0]], [ci[1] - height]], 
+                fmt='none', color='black', capsize=3, alpha=0.7)
+
+# RSI plot
+bars2 = ax2.bar(x, rsi_values, color='orange', alpha=0.7, label='RSI')
+ax2.set_xlabel('Layer')
+ax2.set_ylabel('Role-Separation Index (RSI)')
+ax2.set_title('Role-Separation Index: RSI(l) = (H_conf(l) - H_self(l)) / H_neutral(l)')
+ax2.set_xticks(x)
+ax2.set_xticklabels(layer_labels, rotation=45)
+ax2.grid(True, alpha=0.3)
+ax2.legend()
+
+# Add confidence intervals for RSI
+for i, (bar, ci) in enumerate(zip(bars2, rsi_cis)):
+    height = bar.get_height()
+    ax2.errorbar(bar.get_x() + bar.get_width()/2., height, 
+                yerr=[[height - ci[0]], [ci[1] - height]], 
+                fmt='none', color='black', capsize=3, alpha=0.7)
+
+plt.tight_layout()
+plt.savefig('figures/visualization_9_role_focus_separation.png', dpi=150, bbox_inches='tight')
+plt.close()
+print("  Saved: figures/visualization_9_role_focus_separation.png")
+
+print(f"✓ Visualization 9 complete: {len(rfc_values)} layers analyzed")
+
 # =============================================================================
 # SUMMARY
 # =============================================================================
@@ -722,6 +860,8 @@ print("✓ Distribution plots with effect sizes (Cohen's d)")
 print("✓ Δ-bar summary per layer (Self - Confounder)")
 print("✓ Top-K head ranking per layer")
 print("✓ Cross-token control analysis (first 3 vs last 3 tokens)")
+print("✓ ΔH per layer analysis (Confounder - Self)")
+print("✓ Role-Focus & Separation indices (RFC & RSI with CIs)")
 print(f"\nKey Findings:")
 print(f"- Analyzed {len(layer_stats)} layers across all {n_heads} heads per layer")
 print(f"- Total heads analyzed: {len(top_heads)}")
