@@ -4,7 +4,13 @@
 [![Reproducible](https://img.shields.io/badge/reproducible-✓-green.svg)](https://github.com/mattduffy/self-referent-test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This project investigates role-conditioning circuits in Mistral-7B using mechanistic interpretability to identify how the model processes self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. 
+This project investigates role-conditioning circuits in Mistral-7B using mechanistic interpretability to identify how the model processes self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. There are early indications that the Role Focus Coefficient (RFC) might be a good candidate for approximating role-adherence in instruction-tuned models.  
+
+**Metrics for Base vs Instruct RFC and RFI**
+RFC differences: Mean -0.0917 (instruct shows systematically lower role-focus throughout the circuit)
+RSI differences: Mean -0.0296 (likely too noisy to be a standard metric)
+19/32 layers show significant RFC differences
+12/32 layers show significant RSI differences
 
 ## Research Hypothesis
 
@@ -21,11 +27,14 @@ This project investigates role-conditioning circuits in Mistral-7B using mechani
 ├── activation_analysis.py    # Advanced activation analysis with hooks
 ├── interventions.py          # Intervention experiments with ablations
 ├── visualize_results.py      # Comprehensive visualization suite
+├── compare_base_instruct.py  # Base vs instruct model comparison
 ├── analyze_results.py        # Results analysis and CSV export
 ├── output_manager.py         # Output file management
 ├── deterministic.py          # Deterministic setup utilities
 ├── targeted_interventions.json # Intervention configuration
-├── figures/                  # Generated visualization plots
+├── figures/                  # Generated visualization plots (instruct model)
+├── figures_base/             # Generated visualization plots (base model)
+├── comparison_results/       # Base vs instruct comparison results
 ├── results_activation_analysis/  # Analysis results and raw data
 └── README.md                # This file
 ```
@@ -40,8 +49,11 @@ pip install -r requirements.txt
 
 **2. Run Activation Analysis:**
 ```bash
-# Run with 30 prompts per category (recommended)
+# Run with 30 prompts per category on instruct model (recommended)
 python activation_analysis.py --prompts_per_category 30
+
+# Run on base model
+python activation_analysis.py --model_id mistralai/Mistral-7B-v0.1 --prompts_per_category 30 --output_type latest_base
 
 # Or with custom parameters
 python activation_analysis.py --model_id mistralai/Mistral-7B-Instruct-v0.1 --prompts_per_category 30 --device cpu --seed 123
@@ -49,8 +61,11 @@ python activation_analysis.py --model_id mistralai/Mistral-7B-Instruct-v0.1 --pr
 
 **3. Generate Visualizations:**
 ```bash
-# Generate visualizations for normal runs
+# Generate visualizations for instruct model runs
 python visualize_results.py --output_type normal
+
+# Generate visualizations for base model runs
+python visualize_results.py --output_type base
 
 # Generate visualizations for intervention runs  
 python visualize_results.py --output_type intervention
@@ -66,6 +81,15 @@ python interventions.py --prompts_per_category 30
 
 # Run specific intervention configuration
 python interventions.py --config_file targeted_interventions.json --prompts_per_category 30
+```
+
+**5. Compare Base vs Instruct Models:**
+```bash
+# Run comparison analysis
+python compare_base_instruct.py
+
+# With custom directories
+python compare_base_instruct.py --base_dir results_activation_analysis/latest_base --instruct_dir results_activation_analysis/latest_run
 ```
 
 This creates 9 comprehensive visualizations in the `figures/` directory.
@@ -182,6 +206,10 @@ Third-person perspective for control comparison:
 ![Role-Focus & Separation Indices](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_9_role_focus_separation.png)
 *Proposed RFC and RSI metrics with confidence intervals. RFC measures how much more focused self-referent attention is compared to neutral, while RSI measures the separation between confounder and self-referent patterns.*
 
+### Base vs Instruct Model Comparison
+![RFC and RSI Differences](https://raw.githubusercontent.com/mduffster/self-referent-test/master/comparison_results/rfc_rsi_differences.png)
+*Statistical comparison of RFC and RSI differences between base and instruct models with 95% confidence intervals. RFC in base model middle layers is >> 0, whereas instruct models ~= 0, showing much more focused attention on self-reference in base vs instruct models. A potentially useful dashboard metric for fine-tuning effectiveness, tracking the alignment of fact-based treatment with self-oriented prompts.*
+
 ### Key Metrics
 - **Attention Entropy**: Measures focus vs. distributed attention
 - **Role-Focus Coefficient (RFC)**: `RFC(l) = 1 - H_self(l) / H_neutral(l)`
@@ -210,7 +238,11 @@ python experiment.py --model_id mistralai/Mistral-7B-Instruct-v0.1 --prompts_per
 
 ```
 results_activation_analysis/
-├── latest_run/                    # Current baseline analysis results
+├── latest_run/                    # Current instruct model analysis results
+│   ├── activations.json          # Processed activation data
+│   ├── raw_*.npz                 # Raw activation arrays
+│   └── experiment_config.json    # Analysis configuration
+├── latest_base/                   # Current base model analysis results
 │   ├── activations.json          # Processed activation data
 │   ├── raw_*.npz                 # Raw activation arrays
 │   └── experiment_config.json    # Analysis configuration
@@ -221,7 +253,7 @@ results_activation_analysis/
 │   └── ...                       # Other intervention configurations
 └── run_YYYYMMDD_HHMMSS/          # Historical runs (for comparison)
 
-figures/
+figures/                           # Instruct model visualizations
 ├── visualization_1_layer_attention_lines.png
 ├── visualization_2_heatmaps.png
 ├── visualization_3_token_attention.png
@@ -232,8 +264,21 @@ figures/
 ├── visualization_8_delta_h_per_layer.png
 └── visualization_9_role_focus_separation.png
 
-figures/intervention/              # Intervention-specific visualizations
-└── (intervention comparison plots)
+figures_base/                      # Base model visualizations
+├── visualization_1_layer_attention_lines.png
+├── visualization_2_heatmaps.png
+├── visualization_3_token_attention.png
+├── visualization_4_distributions.png
+├── visualization_5_delta_bar_summary.png
+├── visualization_6_top_k_head_ranking.png
+├── visualization_7_cross_token_control.png
+├── visualization_8_delta_h_per_layer.png
+└── visualization_9_role_focus_separation.png
+
+comparison_results/                # Base vs instruct comparison
+├── rfc_rsi_comparison.png        # Side-by-side model comparison
+├── rfc_rsi_differences.png       # Statistical difference analysis
+└── detailed_comparison.csv       # Complete numerical results
 ```
 
 ## Findings

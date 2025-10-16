@@ -12,7 +12,7 @@ import pandas as pd
 class OutputManager:
     """Manages saving experiment results to various formats."""
     
-    def __init__(self, output_dir="results", use_latest=False, use_intervention=False):
+    def __init__(self, output_dir="results", use_latest=False, use_intervention=False, use_base=False):
         """
         Initialize output manager.
         
@@ -20,11 +20,13 @@ class OutputManager:
             output_dir: Directory to save results
             use_latest: If True, use 'latest_run' folder instead of timestamped
             use_intervention: If True, use 'latest_intervention' folder instead of timestamped
+            use_base: If True, use 'latest_base' folder instead of timestamped
         """
         self.output_dir = output_dir
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.use_latest = use_latest
         self.use_intervention = use_intervention
+        self.use_base = use_base
         
         # Create output directory
         os.makedirs(output_dir, exist_ok=True)
@@ -32,6 +34,8 @@ class OutputManager:
         # Create subdirectory
         if use_intervention:
             self.run_dir = os.path.join(output_dir, "latest_intervention")
+        elif use_base:
+            self.run_dir = os.path.join(output_dir, "latest_base")
         elif use_latest:
             self.run_dir = os.path.join(output_dir, "latest_run")
         else:

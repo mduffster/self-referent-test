@@ -1,6 +1,6 @@
 """
-Advanced activation analysis for self-referent experiment.
-This script extracts and analyzes internal model activations.
+Intervention/ablation experiments for self-referent analysis.
+This script runs ablations using the same setup as activation_analysis.py.
 """
 
 import torch
@@ -16,28 +16,31 @@ import seaborn as sns
 import os
 import argparse
 
-class ActivationAnalyzer:
-    """Analyzes model activations for self-referent patterns."""
+class InterventionAnalyzer:
+    """Analyzes model activations for self-referent patterns with interventions."""
     
     def __init__(self, model: HookedTransformer, output_manager: OutputManager):
         self.model = model
         self.output_manager = output_manager
         self.activations_cache = {}
         
-    def extract_activations(self, prompts: List[str], prompt_categories: List[str]) -> Dict[str, Any]:
+    def extract_activations_with_intervention(self, prompts: List[str], prompt_categories: List[str], 
+                                            intervention_config: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Extract activations for a set of prompts.
+        Extract activations for a set of prompts with intervention applied.
         
         Args:
             prompts: List of prompts to analyze
-            prompt_categories: List of categories (self_referent, confounder, neutral)
+            prompt_categories: List of categories (self_referent, confounder, neutral, third_person)
+            intervention_config: Configuration for the intervention
             
         Returns:
             Dictionary containing activation data
         """
-        print(f"Extracting activations for {len(prompts)} prompts...")
+        print(f"Extracting activations for {len(prompts)} prompts with intervention...")
+        print(f"Intervention config: {intervention_config}")
         
-        # Define which activations to extract
+        # Define which activations to extract (same as activation_analysis.py)
         activation_names = [
             "embed",  # Input embeddings
             "pos_embed",  # Position embeddings
@@ -47,13 +50,51 @@ class ActivationAnalyzer:
         # Add all attention and MLP layers
         for layer in range(self.model.cfg.n_layers):  # All layers
             activation_names.extend([
-                f"blocks.{layer}.attn.hook_pattern", # Attention patterns (this exists)
+                f"blocks.{layer}.attn.hook_pattern", # Attention patterns
                 f"blocks.{layer}.mlp.hook_post",     # MLP output
             ])
         
         all_activations = {name: [] for name in activation_names}
         all_prompts = []
         all_categories = []
+        
+        # Create intervention hook
+        intervention_type = intervention_config.get("type", "attention")
+        layer = intervention_config.get("layer")
+        head = intervention_config.get("head")
+        method = intervention_config.get("method", "zero_out")
+        
+        def create_intervention_hook():
+            if intervention_type == "attention" and head is not None:
+                def intervention_hook(attn_pattern, hook):
+                    if method == "zero_out":
+                        attn_pattern[0, head, :, :] = 0.0
+                    elif method == "half_out":
+                        attn_pattern[0, head, :, :] = attn_pattern[0, head, :, :] * 0.5
+                    elif method == "random":
+                        seq_len = attn_pattern.shape[-1]
+                        random_pattern = torch.randn(seq_len, seq_len)
+                        random_pattern = torch.softmax(random_pattern, dim=-1)
+                        attn_pattern[0, head, :, :] = random_pattern
+                    elif method == "uniform":
+                        seq_len = attn_pattern.shape[-1]
+                        uniform_pattern = torch.ones(seq_len, seq_len) / seq_len
+                        attn_pattern[0, head, :, :] = uniform_pattern
+                    return attn_pattern
+                return (f"blocks.{layer}.attn.hook_pattern", intervention_hook)
+            
+            elif intervention_type == "mlp":
+                def intervention_hook(mlp_output, hook):
+                    if method == "zero_out":
+                        mlp_output[0, :, :] = 0.0
+                    elif method == "random":
+                        mlp_output[0, :, :] = torch.randn_like(mlp_output[0, :, :])
+                    return mlp_output
+                return (f"blocks.{layer}.mlp.hook_post", intervention_hook)
+            
+            return None
+        
+        intervention_hook = create_intervention_hook()
         
         for i, (prompt, category) in enumerate(zip(prompts, prompt_categories)):
             print(f"Processing prompt {i+1}/{len(prompts)}: {prompt[:50]}...")
@@ -62,13 +103,21 @@ class ActivationAnalyzer:
                 # Tokenize the prompt
                 tokens = self.model.to_tokens(prompt)
                 
-                # Run forward pass with hooks to capture activations
+                # Run forward pass with hooks to capture activations and intervention
                 with torch.no_grad():
-                    _, cache = self.model.run_with_cache(
-                        tokens,
-                        names_filter=activation_names,
-                        return_type="logits"
-                    )
+                    if intervention_hook:
+                        with self.model.hooks([intervention_hook]):
+                            _, cache = self.model.run_with_cache(
+                                tokens,
+                                names_filter=activation_names,
+                                return_type="logits"
+                            )
+                    else:
+                        _, cache = self.model.run_with_cache(
+                            tokens,
+                            names_filter=activation_names,
+                            return_type="logits"
+                        )
                 
                 # Store activations for this prompt
                 for name in activation_names:
@@ -94,7 +143,8 @@ class ActivationAnalyzer:
             "activations": all_activations,
             "prompts": all_prompts,
             "categories": all_categories,
-            "activation_names": activation_names
+            "activation_names": activation_names,
+            "intervention_config": intervention_config
         }
     
     def analyze_attention_patterns(self, activation_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -202,7 +252,6 @@ class ActivationAnalyzer:
             filename = f"raw_{activation_name.replace('.', '_').replace('hook_', '')}.npz"
             
             # Convert activations to a format that can be saved (object array to handle different shapes)
-            # Each activation in the list can have different shapes, so we need object dtype
             activations_array = np.empty(len(activation_list), dtype=object)
             for i, activation in enumerate(activation_list):
                 activations_array[i] = activation
@@ -212,7 +261,8 @@ class ActivationAnalyzer:
                 'activations': activations_array,
                 'prompts': np.array(activation_data["prompts"]),
                 'categories': np.array(activation_data["categories"]),
-                'activation_name': np.array(activation_name)
+                'activation_name': np.array(activation_name),
+                'intervention_config': np.array(str(activation_data["intervention_config"]))
             }
             
             # Save as compressed numpy file
@@ -221,9 +271,28 @@ class ActivationAnalyzer:
             
             print(f"✓ Saved {activation_name} to {filename}")
     
-    def run_analysis(self, num_prompts_per_category: int = 3) -> Dict[str, Any]:
-        """Run the complete activation analysis."""
-        print("Starting activation analysis...")
+    def get_intervention_directory_name(self, intervention_config: Dict[str, Any]) -> str:
+        """Generate directory name based on intervention configuration."""
+        intervention_type = intervention_config.get("type", "unknown")
+        layer = intervention_config.get("layer")
+        head = intervention_config.get("head")
+        method = intervention_config.get("method", "zero_out")
+        
+        if intervention_type == "attention":
+            if head is not None:
+                return f"sh_{layer}_{head}_{method}"  # single head
+            else:
+                return f"ah_{layer}_{method}"  # all heads in layer
+        elif intervention_type == "mlp":
+            return f"mlp_{layer}_{method}"
+        else:
+            return f"{intervention_type}_{layer}_{method}"
+    
+    def run_intervention_analysis(self, intervention_config: Dict[str, Any], 
+                                 num_prompts_per_category: int = 3) -> Dict[str, Any]:
+        """Run activation analysis with a specific intervention."""
+        intervention_name = intervention_config.get("name", "unnamed")
+        print(f"Starting intervention analysis: {intervention_name}")
         
         # Get prompts
         all_prompts = get_all_prompts()
@@ -237,10 +306,12 @@ class ActivationAnalyzer:
                 selected_prompts.append(prompt)
                 selected_categories.append(category)
         
-        print(f"Analyzing {len(selected_prompts)} prompts...")
+        print(f"Analyzing {len(selected_prompts)} prompts with intervention...")
         
-        # Extract activations
-        activation_data = self.extract_activations(selected_prompts, selected_categories)
+        # Extract activations with intervention
+        activation_data = self.extract_activations_with_intervention(
+            selected_prompts, selected_categories, intervention_config
+        )
         
         # Analyze attention patterns
         attention_analysis = self.analyze_attention_patterns(activation_data)
@@ -254,7 +325,8 @@ class ActivationAnalyzer:
             "attention_analysis": attention_analysis,
             "comparison_results": comparison_results,
             "num_prompts_analyzed": len(selected_prompts),
-            "prompts_per_category": num_prompts_per_category
+            "prompts_per_category": num_prompts_per_category,
+            "intervention_config": intervention_config
         }
         
         # Save both processed results and raw data
@@ -267,7 +339,7 @@ class ActivationAnalyzer:
 
 def parse_args():
     """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description="Activation analysis for self-referent experiment")
+    parser = argparse.ArgumentParser(description="Intervention experiments for self-referent analysis")
     
     parser.add_argument("--model_id", default="mistralai/Mistral-7B-Instruct-v0.1",
                        help="HuggingFace model ID (default: mistralai/Mistral-7B-Instruct-v0.1)")
@@ -277,16 +349,16 @@ def parse_args():
                        help="Number of prompts per category (default: 3)")
     parser.add_argument("--seed", type=int, default=123,
                        help="Random seed for reproducibility (default: 123)")
-    parser.add_argument("--output_type", default="latest", choices=["latest", "latest_base"],
-                       help="Output directory type: 'latest' for latest_run, 'latest_base' for latest_base (default: latest)")
+    parser.add_argument("--interventions", type=str, default="default",
+                       help="Intervention configuration file or 'default' for built-in configs")
     
     return parser.parse_args()
 
 def main():
-    """Run activation analysis experiment."""
+    """Run intervention experiments."""
     args = parse_args()
     
-    print("Self-Referent Activation Analysis")
+    print("Self-Referent Intervention Analysis")
     print("=" * 40)
     print(f"Model: {args.model_id}")
     print(f"Device: {args.device}")
@@ -298,10 +370,6 @@ def main():
     set_seed(args.seed)
     verify_determinism()
     
-    # Initialize output manager
-    use_base = args.output_type == "latest_base"
-    output_manager = OutputManager("results_activation_analysis", use_latest=True, use_base=use_base)
-    
     # Load model
     print("Loading model...")
     model = HookedTransformer.from_pretrained(
@@ -311,20 +379,58 @@ def main():
     )
     print("✓ Model loaded successfully")
     
-    # Initialize analyzer
-    analyzer = ActivationAnalyzer(model, output_manager)
+    # Load intervention configurations
+    intervention_configs = None
+    if args.interventions != "default" and os.path.exists(args.interventions):
+        import json
+        with open(args.interventions, 'r') as f:
+            intervention_configs = json.load(f)
+        print(f"Loaded intervention configs from: {args.interventions}")
+    else:
+        # Default configurations
+        intervention_configs = [
+            {"name": "zero_attn_0_0", "type": "attention", "layer": 0, "head": 0, "method": "zero_out"},
+            {"name": "zero_attn_1_5", "type": "attention", "layer": 1, "head": 5, "method": "zero_out"},
+        ]
     
-    # Run analysis
-    results = analyzer.run_analysis(num_prompts_per_category=args.prompts_per_category)
+    # Run each intervention separately
+    all_results = {}
     
-    print(f"\n✓ Analysis complete!")
-    print(f"Results saved to: {output_manager.run_dir}")
+    for config in intervention_configs:
+        intervention_name = config.get("name", "unnamed")
+        print(f"\n{'='*60}")
+        print(f"Running intervention: {intervention_name}")
+        print(f"Config: {config}")
+        print(f"{'='*60}")
+        
+        # Create specific directory for this intervention
+        analyzer = InterventionAnalyzer(model, None)  # We'll set output manager per intervention
+        intervention_dir_name = analyzer.get_intervention_directory_name(config)
+        intervention_dir = os.path.join("results_activation_analysis", "latest_intervention", intervention_dir_name)
+        os.makedirs(intervention_dir, exist_ok=True)
+        
+        print(f"Output directory: {intervention_dir}")
+        
+        # Create output manager for this intervention
+        output_manager = OutputManager("results_activation_analysis", use_intervention=True)
+        output_manager.run_dir = intervention_dir
+        
+        # Initialize analyzer with output manager
+        analyzer = InterventionAnalyzer(model, output_manager)
+        
+        # Run intervention analysis
+        results = analyzer.run_intervention_analysis(config, args.prompts_per_category)
+        all_results[intervention_name] = results
+    
+    print(f"\n✓ Intervention analysis complete!")
     
     # Print summary
-    print(f"\n=== ANALYSIS SUMMARY ===")
-    print(f"Prompts analyzed: {results['num_prompts_analyzed']}")
-    print(f"Layers analyzed: {len([k for k in results['attention_analysis'].keys()])}")
-    print(f"Activation types: {len(results['comparison_results'])}")
+    print(f"\n=== INTERVENTION SUMMARY ===")
+    print(f"Interventions run: {len(intervention_configs)}")
+    for config in intervention_configs:
+        intervention_name = config.get("name", "unnamed")
+        intervention_dir_name = analyzer.get_intervention_directory_name(config)
+        print(f"  {intervention_name} -> results_activation_analysis/latest_intervention/{intervention_dir_name}/")
 
 if __name__ == "__main__":
     main()

@@ -38,8 +38,8 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Visualize self-referent experiment results")
     
     parser.add_argument("--output_type", required=True, 
-                       choices=["normal", "intervention", "not_specified"],
-                       help="Output type: 'normal' for figures/, 'intervention' for figures/intervention/, 'not_specified' for figures/not_specified/")
+                       choices=["normal", "intervention", "not_specified", "base"],
+                       help="Output type: 'normal' for figures/, 'intervention' for figures/intervention/, 'base' for figures_base/, 'not_specified' for figures/not_specified/")
     
     parser.add_argument("--input_dir", type=str, default=None,
                        help="Input directory for data files. If not specified, uses latest_run for normal/not_specified, latest_intervention for intervention")
@@ -54,6 +54,8 @@ if args.output_type == "normal":
     output_dir = "figures"
 elif args.output_type == "intervention":
     output_dir = "figures/intervention"
+elif args.output_type == "base":
+    output_dir = "figures_base"
 else:  # not_specified
     output_dir = "figures/not_specified"
 
@@ -63,6 +65,8 @@ if args.input_dir is not None:
 else:
     if args.output_type == "intervention":
         input_dir = "results_activation_analysis/latest_intervention"
+    elif args.output_type == "base":
+        input_dir = "results_activation_analysis/latest_base"
     else:  # normal or not_specified
         input_dir = "results_activation_analysis/latest_run"
 
