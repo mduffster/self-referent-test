@@ -606,8 +606,12 @@ heads = [h['head'] for h in top_heads_per_layer]
 deltas = [h['delta'] for h in top_heads_per_layer]
 abs_deltas = [h['abs_delta'] for h in top_heads_per_layer]
 
-# Color points by delta value
-scatter = ax.scatter(layers, heads, c=deltas, s=100, alpha=0.7, cmap='RdBu_r', edgecolors='black')
+# Color points by delta value, size by absolute delta value
+# Scale sizes to be visible but not too large
+size_scale = 50  # Base size multiplier
+sizes = [abs_delta * size_scale + 20 for abs_delta in abs_deltas]  # Minimum size of 20
+
+scatter = ax.scatter(layers, heads, c=deltas, s=sizes, alpha=0.7, cmap='RdBu_r', edgecolors='black')
 
 # Add colorbar
 cbar = plt.colorbar(scatter, ax=ax)
@@ -867,4 +871,22 @@ print(f"- Analyzed {len(layer_stats)} layers across all {n_heads} heads per laye
 print(f"- Total heads analyzed: {len(top_heads)}")
 print(f"- Top role-sensitive heads identified in heatmap analysis")
 print(f"- Effect sizes for top 6 heads: {min(effect_sizes):.3f} to {max(effect_sizes):.3f}")
+
+# Print ablation candidates based on top delta values
+print(f"\n=== ABLATION CANDIDATES ===")
+print(f"Top-5 Most Negative Δ (Self - Confounder) - Strong Self-Referent Effects:")
+top_negative = sorted(top_heads_per_layer, key=lambda x: x['delta'])[:5]
+for i, head_data in enumerate(top_negative, 1):
+    print(f"  {i}. Layer {head_data['layer']}, Head {head_data['head']}: Δ = {head_data['delta']:.6f}")
+
+print(f"\nTop-5 Most Positive Δ (Self - Confounder) - Strong Confounder Effects:")
+top_positive = sorted(top_heads_per_layer, key=lambda x: x['delta'], reverse=True)[:5]
+for i, head_data in enumerate(top_positive, 1):
+    print(f"  {i}. Layer {head_data['layer']}, Head {head_data['head']}: Δ = {head_data['delta']:.6f}")
+
+print(f"\nTop-5 Largest |Δ| (Most Role-Sensitive Overall):")
+top_abs = sorted(top_heads_per_layer, key=lambda x: x['abs_delta'], reverse=True)[:5]
+for i, head_data in enumerate(top_abs, 1):
+    print(f"  {i}. Layer {head_data['layer']}, Head {head_data['head']}: |Δ| = {head_data['abs_delta']:.6f} (Δ = {head_data['delta']:.6f})")
+
 print("="*60)

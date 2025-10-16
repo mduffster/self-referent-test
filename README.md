@@ -189,7 +189,8 @@ The analysis typically reveals:
 
 ## Future Analysis
 - Expand to other model families
-- Ablation (good candidates appear to be Layer 0 heads 6 and 7 and/or Layer 7 head 11)
+- Ablation, good candidates:
+   - (8,5), (18,28), (31,2), (18,5)
 - Third Person controls
 - Generation effects
 - Interventions: attempt to force self-referent prompts to use confounder activations
