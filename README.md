@@ -170,7 +170,7 @@ Third-person perspective for control comparison:
 
 ### Role-Sensitive Head Distributions
 ![Distribution Plots](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_4_distributions.png)
-*Violin plots showing attention entropy distributions for the most role-sensitive heads across all four categories. Large negative Cohen's d values indicate self-referent prompts produce significantly more focused attention patterns compared to confounder and third-person prompts.*
+*Violin plots showing attention entropy distributions for the most role-sensitive heads across all four categories. Large negative Cohen's d values indicate self-referent prompts produce more focused attention patterns compared to confounder and third-person prompts. But at these particular heads, neutral is most diffuse. Indicates these heads might be "role-orientation" nodes.*
 
 ### Layer-wise Role-Conditioning Effects
 ![Δ-Bar Summary](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_5_delta_bar_summary.png)
