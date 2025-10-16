@@ -23,6 +23,7 @@ import torch
 from typing import Dict, List, Tuple
 import glob
 import os
+import argparse
 from scipy import stats
 
 # Set plotting style
@@ -31,7 +32,56 @@ sns.set_palette("husl")
 plt.rcParams['figure.figsize'] = (12, 8)
 plt.rcParams['font.size'] = 12
 
+# Parse command line arguments
+def parse_args():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description="Visualize self-referent experiment results")
+    
+    parser.add_argument("--output_type", required=True, 
+                       choices=["normal", "intervention", "not_specified"],
+                       help="Output type: 'normal' for figures/, 'intervention' for figures/intervention/, 'not_specified' for figures/not_specified/")
+    
+    parser.add_argument("--input_dir", type=str, default=None,
+                       help="Input directory for data files. If not specified, uses latest_run for normal/not_specified, latest_intervention for intervention")
+    
+    return parser.parse_args()
+
+# Parse arguments
+args = parse_args()
+
+# Set output directory based on argument
+if args.output_type == "normal":
+    output_dir = "figures"
+elif args.output_type == "intervention":
+    output_dir = "figures/intervention"
+else:  # not_specified
+    output_dir = "figures/not_specified"
+
+# Set input directory based on argument
+if args.input_dir is not None:
+    input_dir = args.input_dir
+else:
+    if args.output_type == "intervention":
+        input_dir = "results_activation_analysis/latest_intervention"
+    else:  # normal or not_specified
+        input_dir = "results_activation_analysis/latest_run"
+
+# Create output directory if it doesn't exist
+os.makedirs(output_dir, exist_ok=True)
+
 print("✓ Libraries imported successfully")
+print(f"✓ Output directory set to: {output_dir}")
+print(f"✓ Input directory set to: {input_dir}")
+
+# Check if input directory exists
+if not os.path.exists(input_dir):
+    print(f"⚠️  Warning: Input directory {input_dir} does not exist!")
+    print("Available directories in results_activation_analysis:")
+    if os.path.exists("results_activation_analysis"):
+        for item in os.listdir("results_activation_analysis"):
+            if os.path.isdir(os.path.join("results_activation_analysis", item)):
+                print(f"  - {item}")
+    exit(1)
 
 # =============================================================================
 # 2. DATA LOADING AND SUMMARY
@@ -51,7 +101,7 @@ print(f"Model: {n_layers} layers, {n_heads} heads per layer")
 print("\nLoading raw activation data from NPZ files...")
 
 # Find NPZ files
-npz_files = glob.glob("results_activation_analysis/run_20251015_200918/raw_*.npz")
+npz_files = glob.glob(f"{input_dir}/raw_*.npz")
 print(f"Found {len(npz_files)} NPZ files")
 
 # Load all activation data and compute within-block averages
@@ -162,16 +212,16 @@ for layer in sorted(df['layer'].unique()):
     
     # Calculate statistics for each category
     stats_dict = {}
-    for category in ['self_referent', 'neutral', 'confounder']:
+    for category in ['self_referent', 'neutral', 'confounder', 'third_person']:
         cat_data = layer_df[layer_df['category'] == category]['avg_entropy']
         if len(cat_data) > 0:
             mean_val = cat_data.mean()
             ci = stats.t.interval(0.95, len(cat_data)-1, loc=mean_val, scale=stats.sem(cat_data))
             stats_dict[category] = {'mean': mean_val, 'ci': ci, 'count': len(cat_data)}
     
-    # Only include layers that have all three categories
-    if len(stats_dict) == 3:
-        layer_stats.append({
+    # Only include layers that have at least the three main categories
+    if len(stats_dict) >= 3:
+        layer_data = {
             'layer': layer,
             'self_mean': stats_dict['self_referent']['mean'],
             'self_ci': stats_dict['self_referent']['ci'],
@@ -179,7 +229,14 @@ for layer in sorted(df['layer'].unique()):
             'neutral_ci': stats_dict['neutral']['ci'],
             'confounder_mean': stats_dict['confounder']['mean'],
             'confounder_ci': stats_dict['confounder']['ci']
-        })
+        }
+        
+        # Add third_person if available
+        if 'third_person' in stats_dict:
+            layer_data['third_person_mean'] = stats_dict['third_person']['mean']
+            layer_data['third_person_ci'] = stats_dict['third_person']['ci']
+        
+        layer_stats.append(layer_data)
 
 print(f"✓ Layer-wise statistics computed for {len(layer_stats)} layers")
 
@@ -190,7 +247,7 @@ head_diffs_self_neutral = np.zeros((n_layers, n_heads))  # layers x heads
 head_diffs_self_confounder = np.zeros((n_layers, n_heads))
 
 for layer in range(n_layers):
-    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'{input_dir}/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -242,6 +299,7 @@ layers = [d['layer'] for d in layer_stats]
 ax.plot(layers, [d['self_mean'] for d in layer_stats], 'r-', linewidth=2, label='Self-referent', marker='o', markersize=4)
 ax.plot(layers, [d['neutral_mean'] for d in layer_stats], 'b-', linewidth=2, label='Neutral', marker='s', markersize=4)
 ax.plot(layers, [d['confounder_mean'] for d in layer_stats], 'g-', linewidth=2, label='Confounder', marker='^', markersize=4)
+ax.plot(layers, [d['third_person_mean'] for d in layer_stats], 'm-', linewidth=2, label='Third-person', marker='d', markersize=4)
 
 # Plot confidence intervals
 for d in layer_stats:
@@ -249,6 +307,7 @@ for d in layer_stats:
     ax.fill_between([layer, layer], [d['self_ci'][0], d['self_ci'][1]], alpha=0.2, color='red')
     ax.fill_between([layer, layer], [d['neutral_ci'][0], d['neutral_ci'][1]], alpha=0.2, color='blue')
     ax.fill_between([layer, layer], [d['confounder_ci'][0], d['confounder_ci'][1]], alpha=0.2, color='green')
+    ax.fill_between([layer, layer], [d['third_person_ci'][0], d['third_person_ci'][1]], alpha=0.2, color='magenta')
 
 ax.set_xlabel('Layer')
 ax.set_ylabel('Mean Attention Entropy')
@@ -256,9 +315,9 @@ ax.set_title('Layer-wise Attention Entropy: Role-Conditioning Circuits')
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('figures/visualization_1_layer_attention_lines.png', dpi=150, bbox_inches='tight')
+plt.savefig(f'{output_dir}/visualization_1_layer_attention_lines.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("  Saved: figures/visualization_1_layer_attention_lines.png")
+print(f"  Saved: {output_dir}/visualization_1_layer_attention_lines.png")
 
 print(f"✓ Visualization 1 complete: {len(layer_stats)} layers analyzed")
 
@@ -290,9 +349,9 @@ ax2.set_yticks(range(0, 32, 4))
 plt.colorbar(im2, ax=ax2)
 
 plt.tight_layout()
-plt.savefig('figures/visualization_2_heatmaps.png', dpi=150, bbox_inches='tight')
+plt.savefig(f'{output_dir}/visualization_2_heatmaps.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("  Saved: figures/visualization_2_heatmaps.png")
+print(f"  Saved: {output_dir}/visualization_2_heatmaps.png")
 
 # Find and annotate top role-sensitive heads
 print("\nTop 10 Role-Sensitive Heads (Self - Neutral):")
@@ -315,7 +374,7 @@ print(f"Processing {len(key_layers)} key layers for token attention analysis..."
 
 for i, layer in enumerate(key_layers):
     print(f"  Processing layer {layer} ({i+1}/{len(key_layers)})...")
-    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'{input_dir}/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -325,21 +384,24 @@ for i, layer in enumerate(key_layers):
         self_acts = [act for act, cat in zip(activations, categories) if cat == 'self_referent' and act is not None]
         neutral_acts = [act for act, cat in zip(activations, categories) if cat == 'neutral' and act is not None]
         confounder_acts = [act for act, cat in zip(activations, categories) if cat == 'confounder' and act is not None]
+        third_person_acts = [act for act, cat in zip(activations, categories) if cat == 'third_person' and act is not None]
         
-        if self_acts and neutral_acts and confounder_acts:
-            print(f"    Computing attention patterns for {len(self_acts)} self, {len(neutral_acts)} neutral, {len(confounder_acts)} confounder activations...")
+        if self_acts and neutral_acts and confounder_acts and third_person_acts:
+            print(f"    Computing attention patterns for {len(self_acts)} self, {len(neutral_acts)} neutral, {len(confounder_acts)} confounder, {len(third_person_acts)} third-person activations...")
             # Calculate attention to first 3 tokens (positions 0, 1, 2)
-            # For self-referent (5 tokens), neutral/confounder (9 tokens)
+            # For self-referent (5 tokens), neutral/confounder/third-person (9 tokens)
             self_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in self_acts], axis=0)  # (32 heads,)
             neutral_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in neutral_acts], axis=0)
             confounder_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in confounder_acts], axis=0)
+            third_person_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in third_person_acts], axis=0)
             print(f"    ✓ Layer {layer} processed")
             
             token_attention_data.append({
                 'layer': layer,
                 'self': self_attn_to_first3,
                 'neutral': neutral_attn_to_first3,
-                'confounder': confounder_attn_to_first3
+                'confounder': confounder_attn_to_first3,
+                'third_person': third_person_attn_to_first3
             })
 
 # Create token-conditioned attention plot
@@ -353,6 +415,7 @@ for i, data in enumerate(token_attention_data):
     ax.plot(heads, data['self'], 'r-', linewidth=2, label='Self-referent', marker='o', markersize=3)
     ax.plot(heads, data['neutral'], 'b-', linewidth=2, label='Neutral', marker='s', markersize=3)
     ax.plot(heads, data['confounder'], 'g-', linewidth=2, label='Confounder', marker='^', markersize=3)
+    ax.plot(heads, data['third_person'], 'm-', linewidth=2, label='Third-person', marker='d', markersize=3)
     
     ax.set_title(f'Layer {data["layer"]}')
     ax.set_xlabel('Head')
@@ -363,9 +426,9 @@ for i, data in enumerate(token_attention_data):
 
 plt.suptitle('Token-Conditioned Attention Patterns: Role-Sensitive Heads', fontsize=14)
 plt.tight_layout()
-plt.savefig('figures/visualization_3_token_attention.png', dpi=150, bbox_inches='tight')
+plt.savefig(f'{output_dir}/visualization_3_token_attention.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("  Saved: figures/visualization_3_token_attention.png")
+print(f"  Saved: {output_dir}/visualization_3_token_attention.png")
 
 print(f"✓ Visualization 3 complete: {len(token_attention_data)} layers analyzed")
 
@@ -383,7 +446,7 @@ violin_data = []
 effect_sizes = []
 
 for layer, head in top_role_heads:
-    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'{input_dir}/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -393,8 +456,9 @@ for layer, head in top_role_heads:
         self_acts = [act for act, cat in zip(activations, categories) if cat == 'self_referent' and act is not None]
         neutral_acts = [act for act, cat in zip(activations, categories) if cat == 'neutral' and act is not None]
         confounder_acts = [act for act, cat in zip(activations, categories) if cat == 'confounder' and act is not None]
+        third_person_acts = [act for act, cat in zip(activations, categories) if cat == 'third_person' and act is not None]
         
-        if self_acts and neutral_acts and confounder_acts:
+        if self_acts and neutral_acts and confounder_acts and third_person_acts:
             # Calculate attention entropy for this specific head across all prompts
             self_values = []
             for act in self_acts:
@@ -431,13 +495,26 @@ for layer, head in top_role_heads:
                     entropy = -np.sum(attn_dist * np.log(attn_dist))
                     entropies.append(entropy)
                 confounder_values.append(np.mean(entropies))
+                
+            third_person_values = []
+            for act in third_person_acts:
+                head_attn = act[0, head, :, :]
+                entropies = []
+                for query_pos in range(head_attn.shape[0]):
+                    attn_dist = head_attn[query_pos, :]
+                    attn_dist = attn_dist + 1e-8
+                    attn_dist = attn_dist / attn_dist.sum()
+                    entropy = -np.sum(attn_dist * np.log(attn_dist))
+                    entropies.append(entropy)
+                third_person_values.append(np.mean(entropies))
             
             violin_data.append({
                 'layer': layer,
                 'head': head,
                 'self': self_values,
                 'neutral': neutral_values,
-                'confounder': confounder_values
+                'confounder': confounder_values,
+                'third_person': third_person_values
             })
             
             # Calculate Cohen's d effect size (Self vs Neutral)
@@ -457,25 +534,25 @@ for i, data in enumerate(violin_data):
     ax = axes[i]
     
     # Create violin plot
-    parts = ax.violinplot([data['self'], data['neutral'], data['confounder']], positions=[1, 2, 3], showmeans=True, showmedians=True)
+    parts = ax.violinplot([data['self'], data['neutral'], data['confounder'], data['third_person']], positions=[1, 2, 3, 4], showmeans=True, showmedians=True)
     
     # Color the violins
-    colors = ['red', 'blue', 'green']
+    colors = ['red', 'blue', 'green', 'magenta']
     for pc, color in zip(parts['bodies'], colors):
         pc.set_facecolor(color)
         pc.set_alpha(0.7)
     
-    ax.set_xticks([1, 2, 3])
-    ax.set_xticklabels(['Self', 'Neutral', 'Confounder'])
+    ax.set_xticks([1, 2, 3, 4])
+    ax.set_xticklabels(['Self', 'Neutral', 'Confounder', 'Third-person'])
     ax.set_ylabel('Attention Entropy')
     ax.set_title(f'Layer {data["layer"]}, Head {data["head"]}\nCohen\'s d = {effect_sizes[i]:.3f}')
     ax.grid(True, alpha=0.3)
 
 plt.suptitle('Distribution of Attention Entropies: Role-Sensitive Heads', fontsize=14)
 plt.tight_layout()
-plt.savefig('figures/visualization_4_distributions.png', dpi=150, bbox_inches='tight')
+plt.savefig(f'{output_dir}/visualization_4_distributions.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("  Saved: figures/visualization_4_distributions.png")
+print(f"  Saved: {output_dir}/visualization_4_distributions.png")
 
 # Print effect sizes summary
 print("\nEffect Sizes (Cohen's d: Self vs Neutral):")
@@ -538,9 +615,9 @@ for bars, deltas in [(bars1, layer_deltas_conf), (bars2, layer_deltas_neut)]:
                 f'{delta:.3f}', ha='center', va='bottom' if height >= 0 else 'top', fontsize=8)
 
 plt.tight_layout()
-plt.savefig('figures/visualization_5_delta_bar_summary.png', dpi=150, bbox_inches='tight')
+plt.savefig(f'{output_dir}/visualization_5_delta_bar_summary.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("  Saved: figures/visualization_5_delta_bar_summary.png")
+print(f"  Saved: {output_dir}/visualization_5_delta_bar_summary.png")
 
 print(f"✓ Visualization 5 complete: {len(layer_deltas_conf)} layers analyzed")
 
@@ -555,7 +632,7 @@ top_heads_per_layer = []
 
 for layer in range(n_layers):
     layer_heads = []
-    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'{input_dir}/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -631,9 +708,9 @@ for i, (layer, head, delta, abs_delta) in enumerate(zip(layers, heads, deltas, a
                    textcoords='offset points', fontsize=8, alpha=0.8)
 
 plt.tight_layout()
-plt.savefig('figures/visualization_6_top_k_head_ranking.png', dpi=150, bbox_inches='tight')
+plt.savefig(f'{output_dir}/visualization_6_top_k_head_ranking.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("  Saved: figures/visualization_6_top_k_head_ranking.png")
+print(f"  Saved: {output_dir}/visualization_6_top_k_head_ranking.png")
 
 print(f"✓ Visualization 6 complete: {len(top_heads_per_layer)} role-sensitive heads identified")
 
@@ -648,7 +725,7 @@ token_control_data = []
 key_layers = [0, 5, 10, 15, 20, 25, 30, 31]
 
 for layer in key_layers:
-    npz_file = f'results_activation_analysis/run_20251015_200918/raw_blocks_{layer}_attn_pattern.npz'
+    npz_file = f'{input_dir}/raw_blocks_{layer}_attn_pattern.npz'
     if os.path.exists(npz_file):
         data = np.load(npz_file, allow_pickle=True)
         activations = data['activations']
@@ -657,22 +734,32 @@ for layer in key_layers:
         # Separate by category
         self_acts = [act for act, cat in zip(activations, categories) if cat == 'self_referent' and act is not None]
         neutral_acts = [act for act, cat in zip(activations, categories) if cat == 'neutral' and act is not None]
+        confounder_acts = [act for act, cat in zip(activations, categories) if cat == 'confounder' and act is not None]
+        third_person_acts = [act for act, cat in zip(activations, categories) if cat == 'third_person' and act is not None]
         
-        if self_acts and neutral_acts:
+        if self_acts and neutral_acts and confounder_acts and third_person_acts:
             # Calculate attention to first 3 tokens
             self_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in self_acts], axis=0)
             neutral_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in neutral_acts], axis=0)
+            confounder_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in confounder_acts], axis=0)
+            third_person_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in third_person_acts], axis=0)
             
             # Calculate attention to last 3 tokens (assuming 9 token sequences)
             self_last3 = np.mean([np.mean(act[0, :, 1:, -3:], axis=(1,2)) for act in self_acts], axis=0)
             neutral_last3 = np.mean([np.mean(act[0, :, 1:, -3:], axis=(1,2)) for act in neutral_acts], axis=0)
+            confounder_last3 = np.mean([np.mean(act[0, :, 1:, -3:], axis=(1,2)) for act in confounder_acts], axis=0)
+            third_person_last3 = np.mean([np.mean(act[0, :, 1:, -3:], axis=(1,2)) for act in third_person_acts], axis=0)
             
             token_control_data.append({
                 'layer': layer,
                 'self_first3': self_first3,
                 'neutral_first3': neutral_first3,
+                'confounder_first3': confounder_first3,
+                'third_person_first3': third_person_first3,
                 'self_last3': self_last3,
                 'neutral_last3': neutral_last3,
+                'confounder_last3': confounder_last3,
+                'third_person_last3': third_person_last3,
                 'first3_diff': np.mean(self_first3 - neutral_first3),
                 'last3_diff': np.mean(self_last3 - neutral_last3)
             })
@@ -706,9 +793,9 @@ ax2.grid(True, alpha=0.3)
 
 plt.suptitle('Cross-Token Control: Role-Conditioning Effect by Token Position', fontsize=14)
 plt.tight_layout()
-plt.savefig('figures/visualization_7_cross_token_control.png', dpi=150, bbox_inches='tight')
+plt.savefig(f'{output_dir}/visualization_7_cross_token_control.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("  Saved: figures/visualization_7_cross_token_control.png")
+print(f"  Saved: {output_dir}/visualization_7_cross_token_control.png")
 
 print(f"✓ Visualization 7 complete: {len(token_control_data)} layers analyzed")
 
@@ -762,9 +849,9 @@ for i, (bar, delta) in enumerate(zip(bars, delta_h_per_layer)):
             f'{delta:.3f}', ha='center', va='bottom' if height >= 0 else 'top', fontsize=8)
 
 plt.tight_layout()
-plt.savefig('figures/visualization_8_delta_h_per_layer.png', dpi=150, bbox_inches='tight')
+plt.savefig(f'{output_dir}/visualization_8_delta_h_per_layer.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("  Saved: figures/visualization_8_delta_h_per_layer.png")
+print(f"  Saved: {output_dir}/visualization_8_delta_h_per_layer.png")
 
 print(f"✓ Visualization 8 complete: {len(delta_h_per_layer)} layers analyzed")
 
@@ -844,9 +931,9 @@ for i, (bar, ci) in enumerate(zip(bars2, rsi_cis)):
                 fmt='none', color='black', capsize=3, alpha=0.7)
 
 plt.tight_layout()
-plt.savefig('figures/visualization_9_role_focus_separation.png', dpi=150, bbox_inches='tight')
+plt.savefig(f'{output_dir}/visualization_9_role_focus_separation.png', dpi=150, bbox_inches='tight')
 plt.close()
-print("  Saved: figures/visualization_9_role_focus_separation.png")
+print(f"  Saved: {output_dir}/visualization_9_role_focus_separation.png")
 
 print(f"✓ Visualization 9 complete: {len(rfc_values)} layers analyzed")
 
