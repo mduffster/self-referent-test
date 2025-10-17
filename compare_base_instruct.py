@@ -42,7 +42,7 @@ def load_activation_data(data_dir: str) -> pd.DataFrame:
         print(f"Processing layer {layer_num}...")
         
         # Process each head
-        for head in range(32):  # Mistral-7B has 32 heads per layer
+        for head in range(28):  # Qwen-7B has 28 heads per layer
             # Separate by category
             self_acts = [act for act, cat in zip(activations, categories) if cat == 'self_referent' and act is not None]
             neutral_acts = [act for act, cat in zip(activations, categories) if cat == 'neutral' and act is not None]

@@ -44,13 +44,43 @@ def parse_args():
     parser.add_argument("--input_dir", type=str, default=None,
                        help="Input directory for data files. If not specified, uses latest_run for normal/not_specified, latest_intervention for intervention")
     
+    parser.add_argument("--model_name", type=str, default=None,
+                       help="Model name to look up in config (e.g., 'Qwen/Qwen2.5-7B-Instruct'). If not specified, uses default from config")
+    
+    parser.add_argument("--output_dir", type=str, default=None,
+                       help="Custom output directory (overrides output_type)")
+    
     return parser.parse_args()
 
 # Parse arguments
 args = parse_args()
 
+# Load visualization configuration
+def load_model_config():
+    """Load model configuration from JSON file."""
+    config_path = Path(__file__).parent / "visualization_config.json"
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+    return config
+
+config = load_model_config()
+
+# Determine model architecture
+model_name = args.model_name or config["default_model"]
+if model_name in config["models"]:
+    n_layers = config["models"][model_name]["n_layers"]
+    n_heads = config["models"][model_name]["n_heads"]
+    print(f"Using model config: {model_name}")
+    print(f"Architecture: {n_layers} layers, {n_heads} heads")
+else:
+    print(f"Warning: Model '{model_name}' not found in config, using default Mistral settings")
+    n_layers = 32
+    n_heads = 32
+
 # Set output directory based on argument
-if args.output_type == "normal":
+if args.output_dir is not None:
+    output_dir = args.output_dir
+elif args.output_type == "normal":
     output_dir = "figures"
 elif args.output_type == "intervention":
     output_dir = "figures/intervention"
@@ -95,10 +125,8 @@ print("\n" + "="*60)
 print("DATA LOADING AND SUMMARY")
 print("="*60)
 
-# Model configuration (Mistral-7B-Instruct-v0.1)
-print("Using Mistral-7B configuration...")
-n_layers = 32
-n_heads = 32
+# Model configuration
+print(f"Using {model_name} configuration...")
 print(f"Model: {n_layers} layers, {n_heads} heads per layer")
 
 # Load raw activation data from NPZ files
@@ -149,7 +177,7 @@ for npz_file in npz_files:
     for i, (activation, category) in enumerate(zip(activations, categories)):
         if activation is not None:
             # Use attention entropy instead of mean magnitude (normalized attention patterns)
-            # Shape: (1, 32_heads, seq_len, seq_len) -> (32_heads,) -> scalar
+            # Shape: (1, n_heads, seq_len, seq_len) -> (n_heads,) -> scalar
             per_head_entropies = []
             for head in range(activation.shape[1]):  # For each head
                 head_attn = activation[0, head, :, :]  # (seq_len, seq_len)
@@ -339,8 +367,8 @@ im1 = ax1.imshow(head_diffs_self_neutral, cmap='RdBu_r', aspect='auto')
 ax1.set_xlabel('Head')
 ax1.set_ylabel('Layer')
 ax1.set_title('Δ = Self - Neutral (Attention Magnitude)')
-ax1.set_xticks(range(0, 32, 4))
-ax1.set_yticks(range(0, 32, 4))
+ax1.set_xticks(range(0, n_heads, max(1, n_heads//8)))
+ax1.set_yticks(range(0, n_layers, max(1, n_layers//8)))
 plt.colorbar(im1, ax=ax1)
 
 # Self - Confounder heatmap
@@ -348,8 +376,8 @@ im2 = ax2.imshow(head_diffs_self_confounder, cmap='RdBu_r', aspect='auto')
 ax2.set_xlabel('Head')
 ax2.set_ylabel('Layer')
 ax2.set_title('Δ = Self - Confounder (Attention Magnitude)')
-ax2.set_xticks(range(0, 32, 4))
-ax2.set_yticks(range(0, 32, 4))
+ax2.set_xticks(range(0, n_heads, max(1, n_heads//8)))
+ax2.set_yticks(range(0, n_layers, max(1, n_layers//8)))
 plt.colorbar(im2, ax=ax2)
 
 plt.tight_layout()
@@ -394,7 +422,7 @@ for i, layer in enumerate(key_layers):
             print(f"    Computing attention patterns for {len(self_acts)} self, {len(neutral_acts)} neutral, {len(confounder_acts)} confounder, {len(third_person_acts)} third-person activations...")
             # Calculate attention to first 3 tokens (positions 0, 1, 2)
             # For self-referent (5 tokens), neutral/confounder/third-person (9 tokens)
-            self_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in self_acts], axis=0)  # (32 heads,)
+            self_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in self_acts], axis=0)  # (n_heads,)
             neutral_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in neutral_acts], axis=0)
             confounder_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in confounder_acts], axis=0)
             third_person_attn_to_first3 = np.mean([np.mean(act[0, :, 1:, :3], axis=(1,2)) for act in third_person_acts], axis=0)
@@ -414,7 +442,7 @@ axes = axes.flatten()
 
 for i, data in enumerate(token_attention_data):
     ax = axes[i]
-    heads = range(32)
+    heads = range(n_heads)
     
     ax.plot(heads, data['self'], 'r-', linewidth=2, label='Self-referent', marker='o', markersize=3)
     ax.plot(heads, data['neutral'], 'b-', linewidth=2, label='Neutral', marker='s', markersize=3)

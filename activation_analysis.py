@@ -279,6 +279,8 @@ def parse_args():
                        help="Random seed for reproducibility (default: 123)")
     parser.add_argument("--output_type", default="latest", choices=["latest", "latest_base"],
                        help="Output directory type: 'latest' for latest_run, 'latest_base' for latest_base (default: latest)")
+    parser.add_argument("--output_dir", default="results_activation_analysis",
+                       help="Base output directory (default: results_activation_analysis)")
     
     return parser.parse_args()
 
@@ -300,7 +302,7 @@ def main():
     
     # Initialize output manager
     use_base = args.output_type == "latest_base"
-    output_manager = OutputManager("results_activation_analysis", use_latest=True, use_base=use_base)
+    output_manager = OutputManager(args.output_dir, use_latest=True, use_base=use_base)
     
     # Load model
     print("Loading model...")
