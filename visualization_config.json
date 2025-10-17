@@ -1,0 +1,40 @@
+{
+  "models": {
+    "mistralai/Mistral-7B-Instruct-v0.1": {
+      "n_layers": 32,
+      "n_heads": 32,
+      "description": "Mistral 7B Instruct model"
+    },
+    "mistralai/Mistral-7B-v0.1": {
+      "n_layers": 32,
+      "n_heads": 32,
+      "description": "Mistral 7B base model"
+    },
+    "Qwen/Qwen2.5-7B-Instruct": {
+      "n_layers": 28,
+      "n_heads": 28,
+      "description": "Qwen 2.5 7B Instruct model"
+    },
+    "Qwen/Qwen2.5-7B": {
+      "n_layers": 28,
+      "n_heads": 28,
+      "description": "Qwen 2.5 7B base model"
+    },
+    "google/gemma-7b": {
+      "n_layers": 28,
+      "n_heads": 16,
+      "description": "Gemma 7B model"
+    },
+    "meta-llama/Llama-3.1-8B": {
+      "n_layers": 32,
+      "n_heads": 32,
+      "description": "Llama 3.1 8B model"
+    },
+    "meta-llama/Llama-3.1-8B-Instruct": {
+      "n_layers": 32,
+      "n_heads": 32,
+      "description": "Llama 3.1 8B Instruct model"
+    }
+  },
+  "default_model": "mistralai/Mistral-7B-Instruct-v0.1"
+}
