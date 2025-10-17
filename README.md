@@ -1,10 +1,12 @@
-# Role-Conditioning Circuits Analysis: Mistral-7B
+# Role-Conditioning Circuits Analysis: Mistral 7B and Qwen 2.5 7B
 
 [![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
 [![Reproducible](https://img.shields.io/badge/reproducible-✓-green.svg)](https://github.com/mattduffy/self-referent-test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This project investigates role-conditioning circuits in Mistral-7B using mechanistic interpretability to identify how the model processes self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. There are early indications that the Role Focus Coefficient (RFC) might be a good candidate for approximating role-adherence in instruction-tuned models.  
+This project investigates role-conditioning circuits in Mistral 7B and Qwen 2.5 7B using mechanistic interpretability to identify how the model processes self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. There are early indications that the Role Focus Coefficient (RFC) might be a good candidate for approximating role-adherence in instruction-tuned models, though the effects differ across model families, which I discuss further later. 
+
+The initial evidence indicates that a native multi-lingual LLM, like Qwen, treats self-reference as a distinct circuit even in post-training. I suspect this might be due to the linguistic treatment of hte "self" within the training data. English-centric models, like Mistral, deal with less pronoun ambiguity, and thus post-training processes, by focusing on the assitant persona, can effectively shift self-reference into a fact-finding circuit. I plan to replicate on Llama 8B to observe whether it shows similar pre- and post-training effects as Mistral 7B. 
 
 **Metrics for Base vs Instruct RFC and RSI** 
 [[See Metrics](https://github.com/mduffster/self-referent-test?tab=readme-ov-file#key-metrics)]
@@ -16,9 +18,9 @@ This project investigates role-conditioning circuits in Mistral-7B using mechani
 
 ## Research Hypothesis
 
-**Role-specific linguistic circuits** modulate attention patterns when input context implies identity or task roles. This circuit mapping provides insights into how language models internally represent and condition on speaker/agent identity markers.
+**Role-specific linguistic circuits** modulate attention patterns when input context implies identity or task roles. This circuit mapping provides insights into how language models internally represent and condition on speaker/subject identity markers.
 
-**Current Findings** Indications that instruction tuned models neatly separate role-based queries from self-referential ones, and track self-reference into similar circuits as "fact-finding" neutral questions. This is potentially useful for the development of "dashboard-style" compliance metrics which can be rapidly calculated on relevant sample data. RFC appears to be a reasonable candidate for such a metric, given a controlled dataset of self-referent, neutral, and confounding prompts. 
+**Current Findings** Indications that instruction tuned models neatly separate role-based queries from self-referential ones. Early evidence that Mistral tracks self-reference into similar circuits as "fact-finding" neutral questions, while Qwen maintains a distinct circuit for self-reference. This is potentially useful for the development of "dashboard-style" compliance metrics which can be rapidly calculated on relevant sample data. RFC appears to be a reasonable candidate for such a metric, given a controlled dataset of self-referent, neutral, third-, and confounding prompts. 
 
 ## Project Structure
 
@@ -186,7 +188,7 @@ Third-person perspective for control comparison:
 8. **ΔH per layer analysis** (Confounder - Self entropy difference)
 9. **Role-Focus & Separation indices** (RFC & RSI with confidence intervals)
 
-## Sample Visualizations
+## Sample Visualizations for Mistral 7B Analysis
 
 ### Layer-wise Attention Entropy Patterns
 ![Layer-wise Attention Entropy](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_1_layer_attention_lines.png)
@@ -216,7 +218,7 @@ Third-person perspective for control comparison:
 - **Attention Entropy**: Measures focus vs. distributed attention
 - **Role-Focus Coefficient (RFC)**: `RFC(l) = 1 - H_self(l) / H_neutral(l)`
 - **Role-Separation Index (RSI)**: `RSI(l) = (H_conf(l) - H_self(l)) / H_neutral(l)`
-- **Effect Sizes**: Cohen's d for statistical significance
+- **Effect Sizes**: Cohen's d for within-head statistical significance
 
 ## Usage Examples
 
@@ -286,10 +288,12 @@ comparison_results/                # Base vs instruct comparison
 ## Findings
 
 The analysis typically reveals:
-- **RFC** Base ≫ 0, Instruct ≈ 0 → instruction tuning removes self-reference as a distinct attention regime (role compression).
+- **RFC** For Mistral, Base ≫ 0, Instruct ≈ 0 → instruction tuning removes self-reference as a distinct attention regime (role compression). Qwen shows Base >> 0 and Insruct >> 0, with only small early head differences.
 - **RSI** Small, early positive bump in instruct → emergence of early-layer user/assistant separation.
-- **Layer-wise** 19/32 layers show significant RFC reduction; strongest Δ in layers 2–8.
-- **Interpretation** Instruction tuning flattens self-referent processing into the factual-retrieval circuit visible as lower RFC.
+- **Interpretation** In Mistral, instruction tuning re-orients self-referent processing into the factual-retrieval circuit. In Qwen, role separation is preserved between Base and Instruct.
+
+## Discussion
+Some early hypotheses about 
 
 ## Other Findings
 
