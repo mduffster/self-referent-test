@@ -4,9 +4,9 @@
 [![Reproducible](https://img.shields.io/badge/reproducible-✓-green.svg)](https://github.com/mattduffy/self-referent-test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This project investigates role-conditioning circuits across multiple model families (Mistral 7B, Qwen 2.5 7B, and Llama 3.1 8B) using mechanistic interpretability to identify how models process self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. There are early indications that the Role Focus Coefficient (RFC) might be a good candidate for approximating role-adherence in instruction-tuned models, though the effects differ across model families.
+This project investigates "role-conditioning" circuits across multiple model families (Mistral 7B, Qwen 2.5 7B, and Llama 3.1 8B) using mechanistic interpretability to identify how models process self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The current form of this analysis focuses on attention entropy patterns and identifies specific heads and layers that may be involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. There are early indications that the Role Focus Coefficient (RFC) might be a good candidate for approximating role-adherence in instruction-tuned models, though the effects differ across model families.
 
-The initial evidence indicates that a native multi-lingual LLM, like Qwen, treats self-reference as a distinct circuit in instruct models, unlike English-native models. I suspect this might be due to the linguistic treatment of the "self" within the training data. English-centric models, like Mistral and Llama, deal with less pronoun ambiguity, and thus post-training processes, by focusing on the assistant persona, can effectively shift self-reference into a fact-finding (neutral) circuit. 
+The initial evidence indicates that a native multi-lingual LLM, like Qwen, treats self-reference as a distinct circuit in instruct models, unlike English-native models. I suspect this might be due to the linguistic treatment of the "self" within the training data, and during the instruct fine-tuning process. English-centric models, like Mistral and Llama, deal with less pronoun ambiguity, and thus post-training processes, by focusing on the assistant persona, can effectively shift self-reference into a fact-finding (neutral) circuit. 
 
 **Cross-Model RFC Analysis Results** 
 [[See Metrics](https://github.com/mduffster/self-referent-test?tab=readme-ov-file#key-metrics)]
@@ -436,8 +436,7 @@ Some early hypotheses about
 - SciPy (for statistical analysis)
 
 ## Future Analysis
-- Expand to other model families
-- **Ablation candidates identified:**
+- **Mistral Ablation candidates identified:**
    - Layer 29, Head 26: |Δ| = 0.261058
    - Layer 11, Head 2: |Δ| = 0.242495
    - Layer 26, Head 29: |Δ| = 0.225781
@@ -449,7 +448,6 @@ Some early hypotheses about
 ## Research Applications
 
 I hope this framework can be extended to:
-- **Multi-model comparisons** (GPT, Llama, etc.)
 - **Intervention studies** (attention patching, activation editing)
 - **Scaling studies** (7B → 70B → 405B parameter models)
 - **Task-specific analysis** (reasoning, planning, tool use)
