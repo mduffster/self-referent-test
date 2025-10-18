@@ -2,7 +2,6 @@
 
 [![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
 [![Reproducible](https://img.shields.io/badge/reproducible-✓-green.svg)](https://github.com/mattduffy/self-referent-test)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 This project investigates "role-conditioning" circuits across multiple model families (Mistral 7B, Qwen 2.5 7B, and Llama 3.1 8B) using mechanistic interpretability to identify how models process self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The current form of this analysis focuses on attention entropy patterns and identifies specific heads and layers that may be involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. There are early indications that the Role Focus Coefficient (RFC) might be a good candidate for approximating role-adherence in instruction-tuned models, though the effects differ across model families.
 
