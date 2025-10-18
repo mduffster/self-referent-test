@@ -1,20 +1,28 @@
-# Role-Conditioning Circuits Analysis: Mistral 7B and Qwen 2.5 7B
+# Role-Conditioning Circuits Analysis: Multi-Model Family Study
 
 [![Python](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
 [![Reproducible](https://img.shields.io/badge/reproducible-✓-green.svg)](https://github.com/mattduffy/self-referent-test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This project investigates role-conditioning circuits in Mistral 7B and Qwen 2.5 7B using mechanistic interpretability to identify how the model processes self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. There are early indications that the Role Focus Coefficient (RFC) might be a good candidate for approximating role-adherence in instruction-tuned models, though the effects differ across model families.
+This project investigates role-conditioning circuits across multiple model families (Mistral 7B, Qwen 2.5 7B, and Llama 3.1 8B) using mechanistic interpretability to identify how models process self-referent vs. neutral vs. third person vs. confounder (implied 2nd person) content. The analysis focuses on attention entropy patterns and identifies specific heads and layers involved in role-conditioning behavior. I also develop simple heuristic measurements that can hopefully indicate ongoing role compliance on a simple dataset. There are early indications that the Role Focus Coefficient (RFC) might be a good candidate for approximating role-adherence in instruction-tuned models, though the effects differ across model families.
 
-The initial evidence indicates that a native multi-lingual LLM, like Qwen, treats self-reference as a distinct circuit even in post-training. I suspect this might be due to the linguistic treatment of the "self" within the training data. English-centric models, like Mistral, deal with less pronoun ambiguity, and thus post-training processes, by focusing on the assistant persona, can effectively shift self-reference into a fact-finding circuit. I plan to replicate on Llama 8B to observe whether it shows similar pre- and post-training effects as Mistral 7B. 
+The initial evidence indicates that a native multi-lingual LLM, like Qwen, treats self-reference as a distinct circuit in instruct models, unlike English-native models. I suspect this might be due to the linguistic treatment of the "self" within the training data. English-centric models, like Mistral and Llama, deal with less pronoun ambiguity, and thus post-training processes, by focusing on the assistant persona, can effectively shift self-reference into a fact-finding (neutral) circuit. 
 
-**Metrics for Base vs Instruct RFC and RSI** 
+**Cross-Model RFC Analysis Results** 
 [[See Metrics](https://github.com/mduffster/self-referent-test?tab=readme-ov-file#key-metrics)]
 
-- RFC differences: Mean -0.0917 (instruct shows systematically lower role-focus throughout the circuit)
-- RSI differences: Mean -0.0296 (likely too noisy to be a standard metric)
-- 19/32 layers show significant RFC differences
-- 12/32 layers show significant RSI differences
+### RFC Differences (Instruct - Base) by Model Family (threshold: ±0.01):
+- **Llama 3.1 8B**: Mean -0.0180 (62.5% layers show significant compression, 18.8% near zero)
+- **Mistral 7B**: Mean -0.0934 (81.2% layers show significant compression, 6.2% near zero)  
+- **Qwen 2.5 7B**: Mean +0.0475 (21.4% layers show significant preservation, 50% near zero)
+
+### Key Finding: **Directional Divergence**
+- **English models** (Llama, Mistral): Show strong compression patterns (62.5% and 81.2% of layers respectively)
+- **Multilingual model** (Qwen): Shows preservation in some layers (21.4%) but most layers are unchanged (50% near zero)
+- **Correlation**: Llama vs Mistral show moderate positive correlation (r=0.35, p=0.049)
+
+### Interpretation:
+Qwen's multilingual training appears to maintain self-reference circuits largely unchanged after instruction tuning (50% of layers near zero), while English-native models show systematic compression of self-reference processing toward fact-finding (neutral) circuits. This suggests Qwen treats self-reference as a linguistically distinct circuit that instruction tuning doesn't significantly modify.
 
 ## Research Hypothesis
 
@@ -32,14 +40,30 @@ The initial evidence indicates that a native multi-lingual LLM, like Qwen, treat
 ├── interventions.py          # Intervention experiments with ablations
 ├── visualize_results.py      # Comprehensive visualization suite
 ├── compare_base_instruct.py  # Base vs instruct model comparison
+├── cross_model_correlation.py  # Cross-model RFC correlation analysis
 ├── analyze_results.py        # Results analysis and CSV export
 ├── output_manager.py         # Output file management
 ├── deterministic.py          # Deterministic setup utilities
 ├── targeted_interventions.json # Intervention configuration
-├── figures/                  # Generated visualization plots (instruct model)
-├── figures_base/             # Generated visualization plots (base model)
-├── comparison_results/       # Base vs instruct comparison results
-├── results_activation_analysis/  # Analysis results and raw data
+├── model_family_config.json  # Configuration for all model families
+├── run_pipeline.py           # Automated pipeline script
+├── visualization_config.json # Model architecture configurations
+├── figures/                  # Organized visualization outputs
+│   ├── llama/               # Llama 3.1 8B results
+│   │   ├── base/           # Base model visualizations
+│   │   ├── instruct/       # Instruct model visualizations
+│   │   └── comparison/     # Base vs Instruct comparison
+│   ├── qwen/               # Qwen 2.5 7B results
+│   │   ├── base/
+│   │   ├── instruct/
+│   │   └── comparison/
+│   └── mistral/            # Mistral 7B results
+│       ├── base/
+│       ├── instruct/
+│       └── comparison/
+├── results_activation_analysis/  # Mistral analysis results and raw data
+├── results_llama_activation/     # Llama analysis results and raw data
+├── results_qwen_activation/      # Qwen analysis results and raw data
 └── README.md                # This file
 ```
 
@@ -51,52 +75,129 @@ python -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**2. Run Activation Analysis:**
+**2. Run Complete Analysis Pipeline (Recommended):**
 ```bash
-# Run with 30 prompts per category on instruct model (recommended)
+# Run full pipeline for any model family (analysis + visualization + comparison)
+python run_pipeline.py --family llama
+python run_pipeline.py --family qwen
+python run_pipeline.py --family mistral
+
+# With custom parameters
+python run_pipeline.py --family llama --prompts_per_category 20 --device cpu
+
+# Skip analysis if data already exists
+python run_pipeline.py --family llama --skip_analysis
+```
+
+**3. Run Individual Components:**
+```bash
+# Run activation analysis for specific model
+python activation_analysis.py --model_id meta-llama/Llama-3.1-8B --prompts_per_category 20 --output_type latest_base --output_dir results_llama_activation
+
+# Generate visualizations using family config
+python visualize_results.py --family llama --variant base
+
+# Compare base vs instruct models
+python compare_base_instruct.py --family llama
+
+# Run cross-model correlation analysis
+python cross_model_correlation.py
+```
+
+**4. Legacy Individual Scripts:**
+```bash
+# Run with 30 prompts per category on instruct model
 python activation_analysis.py --prompts_per_category 30
 
-# Run on base model
-python activation_analysis.py --model_id mistralai/Mistral-7B-v0.1 --prompts_per_category 30 --output_type latest_base
+# Generate visualizations for specific model
+python visualize_results.py --output_type normal --input_dir results_activation_analysis/latest_run --model_name mistralai/Mistral-7B-Instruct-v0.1
 
-# Or with custom parameters
-python activation_analysis.py --model_id mistralai/Mistral-7B-Instruct-v0.1 --prompts_per_category 30 --device cpu --seed 123
-```
-
-**3. Generate Visualizations:**
-```bash
-# Generate visualizations for instruct model runs
-python visualize_results.py --output_type normal
-
-# Generate visualizations for base model runs
-python visualize_results.py --output_type base
-
-# Generate visualizations for intervention runs  
-python visualize_results.py --output_type intervention
-
-# Generate visualizations with custom input directory
-python visualize_results.py --output_type normal --input_dir results_activation_analysis/latest_run
-```
-
-**4. Run Intervention Experiments:**
-```bash
-# Run targeted ablations on top role-sensitive heads
+# Run intervention experiments
 python interventions.py --prompts_per_category 30
-
-# Run specific intervention configuration
-python interventions.py --config_file targeted_interventions.json --prompts_per_category 30
 ```
 
-**5. Compare Base vs Instruct Models:**
+This creates organized visualizations in the `figures/{family}/{variant}/` directory structure.
+
+## Configuration System
+
+The project now uses a centralized configuration system for easy multi-model analysis:
+
+### Model Family Configuration (`model_family_config.json`)
+```json
+{
+  "model_families": {
+    "llama": {
+      "base": {
+        "model_id": "meta-llama/Llama-3.1-8B",
+        "output_type": "base",
+        "output_dir": "results_llama_activation",
+        "figures_dir": "figures/llama/base"
+      },
+      "instruct": {
+        "model_id": "meta-llama/Llama-3.1-8B-Instruct",
+        "output_type": "normal",
+        "output_dir": "results_llama_activation",
+        "figures_dir": "figures/llama/instruct"
+      },
+      "comparison": {
+        "base_dir": "results_llama_activation/latest_base",
+        "instruct_dir": "results_llama_activation/latest_run",
+        "output_dir": "figures/llama/comparison"
+      }
+    }
+  },
+  "defaults": {
+    "device": "cpu",
+    "prompts_per_category": 20,
+    "seed": 123
+  }
+}
+```
+
+### Pipeline Automation (`run_pipeline.py`)
+The pipeline script automates the entire workflow:
+1. **Activation Analysis** - Extract activations from base and instruct models
+2. **Visualization** - Generate all 9 visualization plots
+3. **Comparison** - Compare base vs instruct models
+
+### Usage Examples
 ```bash
-# Run comparison analysis
-python compare_base_instruct.py
+# Run complete pipeline for any model family
+python run_pipeline.py --family llama
+python run_pipeline.py --family qwen
+python run_pipeline.py --family mistral
 
-# With custom directories
-python compare_base_instruct.py --base_dir results_activation_analysis/latest_base --instruct_dir results_activation_analysis/latest_run
+# Customize parameters
+python run_pipeline.py --family llama --prompts_per_category 30 --device cpu
+
+# Skip steps if data already exists
+python run_pipeline.py --family llama --skip_analysis
+python run_pipeline.py --family llama --skip_visualization
+python run_pipeline.py --family llama --skip_comparison
 ```
 
-This creates 9 comprehensive visualizations in the `figures/` directory.
+## Cross-Model Correlation Analysis
+
+The `cross_model_correlation.py` script performs statistical analysis across model families to identify patterns in how instruction tuning affects role-conditioning circuits.
+
+### What It Does:
+1. **Loads RFC difference data** from all model families (Llama, Mistral, Qwen)
+2. **Calculates summary statistics** for each model's RFC changes
+3. **Performs correlation analysis** between English models (Llama vs Mistral)
+4. **Identifies directional patterns** across model families
+5. **Saves results** to `cross_model_analysis_results.json`
+
+### Key Findings:
+- **English models** (Llama, Mistral): Show negative RFC changes → instruction tuning compresses self-reference
+- **Multilingual model** (Qwen): Shows positive RFC changes → instruction tuning preserves self-reference
+- **Correlation**: Llama vs Mistral show moderate positive correlation (r=0.35, p=0.049)
+
+### Usage:
+```bash
+python cross_model_correlation.py
+```
+
+This analysis reveals that Qwen's multilingual training maintains self-reference as a linguistically distinct circuit even after instruction tuning, while English-native models shift self-reference processing toward fact-finding (neutral) circuits.
 
 ## Hardware Requirements
 
@@ -191,27 +292,27 @@ Third-person perspective for control comparison:
 ## Sample Visualizations for Mistral 7B Analysis
 
 ### Layer-wise Attention Entropy Patterns
-![Layer-wise Attention Entropy](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_1_layer_attention_lines.png)
+![Layer-wise Attention Entropy](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/mistral/instruct/visualization_1_layer_attention_lines.png)
 *Shows attention entropy progression across all 32 layers with 95% confidence intervals. Self-referent prompts (red) and neutral (blue) consistently show lower entropy (more focused attention) compared to confounder (green) prompts and third person (magenta) prompts.*
 
 ### Head-wise Role Sensitivity Heatmaps
-![Head-wise Δ-Heatmaps](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_2_heatmaps.png)
+![Head-wise Δ-Heatmaps](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/mistral/instruct/visualization_2_heatmaps.png)
 *Identifies specific attention heads that are most sensitive to role-conditioning. Red regions indicate heads where self-referent prompts show different attention patterns compared to neutral/confounder prompts.*
 
 ### Role-Sensitive Head Distributions
-![Distribution Plots](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_4_distributions.png)
+![Distribution Plots](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/mistral/instruct/visualization_4_distributions.png)
 *Violin plots showing attention entropy distributions for the most role-sensitive heads across all four categories. Large negative Cohen's d values indicate self-referent prompts produce more focused attention patterns compared to confounder and third-person prompts. But at these particular heads, neutral is most diffuse. Indicates these heads might be "role-orientation" nodes.*
 
 ### Layer-wise Role-Conditioning Effects
-![Δ-Bar Summary](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_5_delta_bar_summary.png)
+![Δ-Bar Summary](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/mistral/instruct/visualization_5_delta_bar_summary.png)
 *Quantitative summary showing layer-wise differences between conditions. Positive values indicate self-referent prompts have more focused attention (lower entropy) than confounder/neutral prompts.*
 
 ### Role-Focus & Separation Indices
-![Role-Focus & Separation Indices](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/visualization_9_role_focus_separation.png)
+![Role-Focus & Separation Indices](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/mistral/instruct/visualization_9_role_focus_separation.png)
 *Proposed RFC and RSI metrics with confidence intervals. RFC measures how much more focused self-referent attention is compared to neutral, while RSI measures the separation between confounder and self-referent patterns.*
 
 ### Base vs Instruct Model Comparison
-![RFC and RSI Differences](https://raw.githubusercontent.com/mduffster/self-referent-test/master/comparison_results/rfc_rsi_differences.png)
+![RFC and RSI Differences](https://raw.githubusercontent.com/mduffster/self-referent-test/master/figures/mistral/comparison/rfc_rsi_differences.png)
 *Statistical comparison of RFC and RSI differences between base and instruct models with 95% confidence intervals. RFC in base model middle layers is >> 0, whereas instruct models ~= 0, showing much more focused attention on self-reference in base vs instruct models. A potentially useful dashboard metric for fine-tuning effectiveness, tracking the alignment of fact-based treatment with self-oriented prompts.*
 
 ### Key Metrics
@@ -240,49 +341,70 @@ python experiment.py --model_id mistralai/Mistral-7B-Instruct-v0.1 --prompts_per
 
 ## Output Structure
 
+### New Organized Structure (Recommended)
 ```
-results_activation_analysis/
-├── latest_run/                    # Current instruct model analysis results
-│   ├── activations.json          # Processed activation data
-│   ├── raw_*.npz                 # Raw activation arrays
-│   └── experiment_config.json    # Analysis configuration
-├── latest_base/                   # Current base model analysis results
-│   ├── activations.json          # Processed activation data
-│   ├── raw_*.npz                 # Raw activation arrays
-│   └── experiment_config.json    # Analysis configuration
-├── latest_intervention/           # Current intervention results
-│   ├── sh_29_26_zero_out/        # Layer 29, Head 26, zero ablation
-│   ├── sh_29_26_half_out/        # Layer 29, Head 26, half ablation
-│   ├── sh_11_2_zero_out/         # Layer 11, Head 2, zero ablation
-│   └── ...                       # Other intervention configurations
-└── run_YYYYMMDD_HHMMSS/          # Historical runs (for comparison)
+figures/                          # Organized by model family and variant
+├── llama/                       # Llama 3.1 8B results
+│   ├── base/                   # Base model visualizations
+│   │   ├── visualization_1_layer_attention_lines.png
+│   │   ├── visualization_2_heatmaps.png
+│   │   ├── visualization_3_token_attention.png
+│   │   ├── visualization_4_distributions.png
+│   │   ├── visualization_5_delta_bar_summary.png
+│   │   ├── visualization_6_top_k_head_ranking.png
+│   │   ├── visualization_7_cross_token_control.png
+│   │   ├── visualization_8_delta_h_per_layer.png
+│   │   └── visualization_9_role_focus_separation.png
+│   ├── instruct/               # Instruct model visualizations
+│   │   └── [same 9 visualizations]
+│   └── comparison/             # Base vs Instruct comparison
+│       ├── rfc_rsi_comparison.png
+│       ├── rfc_rsi_differences.png
+│       └── detailed_comparison.csv
+├── qwen/                       # Qwen 2.5 7B results
+│   ├── base/
+│   ├── instruct/
+│   └── comparison/
+└── mistral/                    # Mistral 7B results
+    ├── base/
+    ├── instruct/
+    └── comparison/
 
-figures/                           # Instruct model visualizations
-├── visualization_1_layer_attention_lines.png
-├── visualization_2_heatmaps.png
-├── visualization_3_token_attention.png
-├── visualization_4_distributions.png
-├── visualization_5_delta_bar_summary.png
-├── visualization_6_top_k_head_ranking.png
-├── visualization_7_cross_token_control.png
-├── visualization_8_delta_h_per_layer.png
-└── visualization_9_role_focus_separation.png
+results_llama_activation/         # Llama analysis results
+├── latest_base/                 # Base model results
+│   ├── activations.json        # Processed activation data
+│   ├── raw_*.npz              # Raw activation arrays
+│   └── experiment_config.json # Analysis configuration
+└── latest_run/                  # Instruct model results
+    ├── activations.json
+    ├── raw_*.npz
+    └── experiment_config.json
 
-figures_base/                      # Base model visualizations
-├── visualization_1_layer_attention_lines.png
-├── visualization_2_heatmaps.png
-├── visualization_3_token_attention.png
-├── visualization_4_distributions.png
-├── visualization_5_delta_bar_summary.png
-├── visualization_6_top_k_head_ranking.png
-├── visualization_7_cross_token_control.png
-├── visualization_8_delta_h_per_layer.png
-└── visualization_9_role_focus_separation.png
+results_qwen_activation/          # Qwen analysis results
+├── latest_base/
+└── latest_run/
 
-comparison_results/                # Base vs instruct comparison
-├── rfc_rsi_comparison.png        # Side-by-side model comparison
-├── rfc_rsi_differences.png       # Statistical difference analysis
-└── detailed_comparison.csv       # Complete numerical results
+results_activation_analysis/      # Mistral analysis results (legacy)
+├── latest_base/
+├── latest_run/
+└── latest_intervention/         # Intervention results
+    ├── sh_29_26_zero_out/      # Layer 29, Head 26, zero ablation
+    ├── sh_29_26_half_out/      # Layer 29, Head 26, half ablation
+    └── sh_11_2_zero_out/       # Layer 11, Head 2, zero ablation
+```
+
+### Configuration Files
+```
+model_family_config.json         # Centralized configuration for all model families
+├── model_families/
+│   ├── llama/                  # Llama configuration
+│   ├── qwen/                   # Qwen configuration
+│   └── mistral/                # Mistral configuration
+└── defaults/                   # Default parameters
+
+visualization_config.json        # Model architecture configurations
+├── models/                     # Model-specific layer/head counts
+└── default_model/              # Default model for visualization
 ```
 
 ## Findings

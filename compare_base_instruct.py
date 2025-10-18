@@ -10,8 +10,10 @@ import seaborn as sns
 from scipy import stats
 import os
 import glob
+import json
 from typing import Dict, List, Tuple
 import argparse
+from pathlib import Path
 
 # Set plotting style
 plt.style.use('seaborn-v0_8')
@@ -262,9 +264,24 @@ def print_summary_stats(comparison_df: pd.DataFrame):
     print(f"  RFC: {rfc_significant}/{len(comparison_df)} layers")
     print(f"  RSI: {rsi_significant}/{len(comparison_df)} layers")
 
+def load_family_config():
+    """Load model family configuration."""
+    try:
+        config_path = Path(__file__).parent / "model_family_config.json"
+        with open(config_path, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+
 def main():
     """Main comparison function."""
     parser = argparse.ArgumentParser(description="Compare RFC and RSI between base and instruct models")
+    
+    # Family-based arguments
+    parser.add_argument("--family", choices=["llama", "qwen", "mistral"],
+                       help="Model family (overrides individual directory settings)")
+    
+    # Individual arguments (for backward compatibility)
     parser.add_argument("--base_dir", default="results_activation_analysis/latest_base",
                        help="Directory containing base model results")
     parser.add_argument("--instruct_dir", default="results_activation_analysis/latest_run",
@@ -273,6 +290,17 @@ def main():
                        help="Directory to save comparison results")
     
     args = parser.parse_args()
+    
+    # If family is specified, load configuration
+    if args.family:
+        config = load_family_config()
+        if config:
+            comparison_config = config["model_families"][args.family]["comparison"]
+            
+            # Override with family config
+            args.base_dir = comparison_config["base_dir"]
+            args.instruct_dir = comparison_config["instruct_dir"]
+            args.output_dir = comparison_config["output_dir"]
     
     print("Base vs Instruct Model Comparison")
     print("="*50)
