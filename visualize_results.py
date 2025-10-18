@@ -24,6 +24,7 @@ from typing import Dict, List, Tuple
 import glob
 import os
 import argparse
+import json
 from scipy import stats
 
 # Set plotting style
@@ -32,12 +33,28 @@ sns.set_palette("husl")
 plt.rcParams['figure.figsize'] = (12, 8)
 plt.rcParams['font.size'] = 12
 
+def load_family_config():
+    """Load model family configuration."""
+    try:
+        config_path = Path(__file__).parent / "model_family_config.json"
+        with open(config_path, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+
 # Parse command line arguments
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description="Visualize self-referent experiment results")
     
-    parser.add_argument("--output_type", required=True, 
+    # Family-based arguments
+    parser.add_argument("--family", choices=["llama", "qwen", "mistral"],
+                       help="Model family (overrides individual settings)")
+    parser.add_argument("--variant", choices=["base", "instruct"], default="instruct",
+                       help="Model variant: base or instruct (default: instruct)")
+    
+    # Individual arguments (for backward compatibility)
+    parser.add_argument("--output_type", 
                        choices=["normal", "intervention", "not_specified", "base"],
                        help="Output type: 'normal' for figures/, 'intervention' for figures/intervention/, 'base' for figures_base/, 'not_specified' for figures/not_specified/")
     
@@ -50,7 +67,21 @@ def parse_args():
     parser.add_argument("--output_dir", type=str, default=None,
                        help="Custom output directory (overrides output_type)")
     
-    return parser.parse_args()
+    args = parser.parse_args()
+    
+    # If family is specified, load configuration
+    if args.family:
+        config = load_family_config()
+        if config:
+            family_config = config["model_families"][args.family][args.variant]
+            
+            # Override with family config
+            args.output_type = family_config["output_type"]
+            args.input_dir = f"{family_config['output_dir']}/{family_config['output_type']}"
+            args.model_name = family_config["model_id"]
+            args.output_dir = family_config["figures_dir"]
+    
+    return args
 
 # Parse arguments
 args = parse_args()

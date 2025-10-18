@@ -17,6 +17,8 @@ import os
 import argparse
 import psutil
 import gc
+import json
+from pathlib import Path
 
 def get_memory_info():
     """Get current memory usage information."""
@@ -318,10 +320,26 @@ class ActivationAnalyzer:
         
         return results
 
+def load_family_config():
+    """Load model family configuration."""
+    try:
+        config_path = Path(__file__).parent / "model_family_config.json"
+        with open(config_path, 'r') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return None
+
 def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description="Activation analysis for self-referent experiment")
     
+    # Family-based arguments
+    parser.add_argument("--family", choices=["llama", "qwen", "mistral"],
+                       help="Model family (overrides individual model settings)")
+    parser.add_argument("--variant", choices=["base", "instruct"], default="instruct",
+                       help="Model variant: base or instruct (default: instruct)")
+    
+    # Individual model arguments (for backward compatibility)
     parser.add_argument("--model_id", default="mistralai/Mistral-7B-Instruct-v0.1",
                        help="HuggingFace model ID (default: mistralai/Mistral-7B-Instruct-v0.1)")
     parser.add_argument("--device", default="cpu", choices=["cpu", "cuda"],
@@ -335,7 +353,29 @@ def parse_args():
     parser.add_argument("--output_dir", default="results_activation_analysis",
                        help="Base output directory (default: results_activation_analysis)")
     
-    return parser.parse_args()
+    args = parser.parse_args()
+    
+    # If family is specified, load configuration
+    if args.family:
+        config = load_family_config()
+        if config:
+            family_config = config["model_families"][args.family][args.variant]
+            defaults = config["defaults"]
+            
+            # Override with family config
+            args.model_id = family_config["model_id"]
+            args.output_type = family_config["output_type"]
+            args.output_dir = family_config["output_dir"]
+            
+            # Use defaults if not specified
+            if args.device == "cpu" and "device" in defaults:
+                args.device = defaults["device"]
+            if args.prompts_per_category == 3 and "prompts_per_category" in defaults:
+                args.prompts_per_category = defaults["prompts_per_category"]
+            if args.seed == 123 and "seed" in defaults:
+                args.seed = defaults["seed"]
+    
+    return args
 
 def main():
     """Run activation analysis experiment."""

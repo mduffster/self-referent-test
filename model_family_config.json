@@ -1,0 +1,66 @@
+{
+  "model_families": {
+    "llama": {
+      "base": {
+        "model_id": "meta-llama/Llama-3.1-8B",
+        "output_type": "base",
+        "output_dir": "results_llama_activation",
+        "figures_dir": "figures/llama/base"
+      },
+      "instruct": {
+        "model_id": "meta-llama/Llama-3.1-8B-Instruct",
+        "output_type": "normal",
+        "output_dir": "results_llama_activation",
+        "figures_dir": "figures/llama/instruct"
+      },
+      "comparison": {
+        "base_dir": "results_llama_activation/latest_base",
+        "instruct_dir": "results_llama_activation/latest_run",
+        "output_dir": "figures/llama/comparison"
+      }
+    },
+    "qwen": {
+      "base": {
+        "model_id": "Qwen/Qwen2.5-7B",
+        "output_type": "base",
+        "output_dir": "results_qwen_activation",
+        "figures_dir": "figures/qwen/base"
+      },
+      "instruct": {
+        "model_id": "Qwen/Qwen2.5-7B-Instruct",
+        "output_type": "normal",
+        "output_dir": "results_qwen_activation",
+        "figures_dir": "figures/qwen/instruct"
+      },
+      "comparison": {
+        "base_dir": "results_qwen_activation/latest_base",
+        "instruct_dir": "results_qwen_activation/latest_run",
+        "output_dir": "figures/qwen/comparison"
+      }
+    },
+    "mistral": {
+      "base": {
+        "model_id": "mistralai/Mistral-7B-v0.1",
+        "output_type": "base",
+        "output_dir": "results_activation_analysis",
+        "figures_dir": "figures/mistral/base"
+      },
+      "instruct": {
+        "model_id": "mistralai/Mistral-7B-Instruct-v0.1",
+        "output_type": "normal",
+        "output_dir": "results_activation_analysis",
+        "figures_dir": "figures/mistral/instruct"
+      },
+      "comparison": {
+        "base_dir": "results_activation_analysis/latest_base",
+        "instruct_dir": "results_activation_analysis/latest_run",
+        "output_dir": "figures/mistral/comparison"
+      }
+    }
+  },
+  "defaults": {
+    "device": "cpu",
+    "prompts_per_category": 20,
+    "seed": 123
+  }
+}
