@@ -15,6 +15,41 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import os
 import argparse
+import psutil
+import gc
+
+def get_memory_info():
+    """Get current memory usage information."""
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    system_memory = psutil.virtual_memory()
+    
+    return {
+        'process_memory_gb': memory_info.rss / (1024**3),
+        'process_memory_percent': process.memory_percent(),
+        'system_memory_used_gb': system_memory.used / (1024**3),
+        'system_memory_total_gb': system_memory.total / (1024**3),
+        'system_memory_percent': system_memory.percent
+    }
+
+def print_memory_status(stage: str):
+    """Print current memory status with a stage label."""
+    mem_info = get_memory_info()
+    print(f"\n🔍 MEMORY STATUS - {stage}")
+    print(f"   Process: {mem_info['process_memory_gb']:.2f} GB ({mem_info['process_memory_percent']:.1f}%)")
+    print(f"   System:  {mem_info['system_memory_used_gb']:.2f} / {mem_info['system_memory_total_gb']:.2f} GB ({mem_info['system_memory_percent']:.1f}%)")
+    
+    # Warning if memory usage is high
+    if mem_info['system_memory_percent'] > 85:
+        print(f"   ⚠️  WARNING: High system memory usage ({mem_info['system_memory_percent']:.1f}%)")
+    if mem_info['process_memory_percent'] > 20:
+        print(f"   ⚠️  WARNING: High process memory usage ({mem_info['process_memory_percent']:.1f}%)")
+
+def cleanup_memory():
+    """Force garbage collection and memory cleanup."""
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
 
 class ActivationAnalyzer:
     """Analyzes model activations for self-referent patterns."""
@@ -36,6 +71,7 @@ class ActivationAnalyzer:
             Dictionary containing activation data
         """
         print(f"Extracting activations for {len(prompts)} prompts...")
+        print_memory_status("STARTING ACTIVATION EXTRACTION")
         
         # Define which activations to extract
         activation_names = [
@@ -57,6 +93,10 @@ class ActivationAnalyzer:
         
         for i, (prompt, category) in enumerate(zip(prompts, prompt_categories)):
             print(f"Processing prompt {i+1}/{len(prompts)}: {prompt[:50]}...")
+            
+            # Print memory status every 5 prompts
+            if (i + 1) % 5 == 0:
+                print_memory_status(f"PROCESSING PROMPT {i+1}/{len(prompts)}")
             
             try:
                 # Tokenize the prompt
@@ -82,6 +122,10 @@ class ActivationAnalyzer:
                 all_prompts.append(prompt)
                 all_categories.append(category)
                 
+                # Clean up memory after each prompt
+                if (i + 1) % 5 == 0:
+                    cleanup_memory()
+                
             except Exception as e:
                 print(f"Error processing prompt {i+1}: {e}")
                 # Add None values for failed prompts
@@ -89,6 +133,9 @@ class ActivationAnalyzer:
                     all_activations[name].append(None)
                 all_prompts.append(prompt)
                 all_categories.append(category)
+        
+        print_memory_status("ACTIVATION EXTRACTION COMPLETE")
+        cleanup_memory()
         
         return {
             "activations": all_activations,
@@ -224,6 +271,7 @@ class ActivationAnalyzer:
     def run_analysis(self, num_prompts_per_category: int = 3) -> Dict[str, Any]:
         """Run the complete activation analysis."""
         print("Starting activation analysis...")
+        print_memory_status("STARTING ANALYSIS")
         
         # Get prompts
         all_prompts = get_all_prompts()
@@ -241,12 +289,15 @@ class ActivationAnalyzer:
         
         # Extract activations
         activation_data = self.extract_activations(selected_prompts, selected_categories)
+        print_memory_status("AFTER ACTIVATION EXTRACTION")
         
         # Analyze attention patterns
         attention_analysis = self.analyze_attention_patterns(activation_data)
+        print_memory_status("AFTER ATTENTION ANALYSIS")
         
         # Compare activations
         comparison_results = self.compare_activations(activation_data)
+        print_memory_status("AFTER ACTIVATION COMPARISON")
         
         # Compile results
         results = {
@@ -259,9 +310,11 @@ class ActivationAnalyzer:
         
         # Save both processed results and raw data
         self.output_manager.save_activation_data(results)
+        print_memory_status("AFTER SAVING PROCESSED DATA")
         
         # Also save raw activations for deeper analysis
         self.save_raw_activations(activation_data)
+        print_memory_status("AFTER SAVING RAW DATA")
         
         return results
 
@@ -306,12 +359,14 @@ def main():
     
     # Load model
     print("Loading model...")
+    print_memory_status("BEFORE MODEL LOADING")
     model = HookedTransformer.from_pretrained(
         args.model_id,
         device=args.device,
         dtype=torch.float32
     )
     print("✓ Model loaded successfully")
+    print_memory_status("AFTER MODEL LOADING")
     
     # Initialize analyzer
     analyzer = ActivationAnalyzer(model, output_manager)
@@ -321,6 +376,7 @@ def main():
     
     print(f"\n✓ Analysis complete!")
     print(f"Results saved to: {output_manager.run_dir}")
+    print_memory_status("ANALYSIS COMPLETE")
     
     # Print summary
     print(f"\n=== ANALYSIS SUMMARY ===")
