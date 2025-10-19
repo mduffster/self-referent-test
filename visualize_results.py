@@ -108,6 +108,46 @@ else:
     n_layers = 32
     n_heads = 32
 
+# Extract model family and variant for titles
+def get_model_title_info():
+    """Extract model family and variant for chart titles."""
+    if args.family:
+        # Use family config to determine variant
+        family_config = load_family_config()
+        if family_config and args.family in family_config["model_families"]:
+            variant = args.variant
+            family_name = args.family.title()
+            return f"{family_name} {variant.title()}"
+    
+    # Fallback: extract from model name and output_type
+    if "llama" in model_name.lower():
+        family = "Llama"
+    elif "qwen" in model_name.lower():
+        family = "Qwen"
+    elif "mistral" in model_name.lower():
+        family = "Mistral"
+    else:
+        family = "Model"
+    
+    # Determine variant from model name, output_type, or args
+    if "instruct" in model_name.lower():
+        variant = "Instruct"
+    elif "base" in model_name.lower():
+        variant = "Base"
+    elif args.output_type == "base":
+        variant = "Base"
+    elif args.output_type == "normal":
+        variant = "Instruct"
+    elif args.variant:
+        variant = args.variant.title()
+    else:
+        variant = "Model"
+    
+    return f"{family} {variant}"
+
+model_title = get_model_title_info()
+print(f"Model title for charts: {model_title}")
+
 # Set output directory based on argument
 if args.output_dir is not None:
     output_dir = args.output_dir
@@ -374,7 +414,7 @@ for d in layer_stats:
 
 ax.set_xlabel('Layer')
 ax.set_ylabel('Mean Attention Entropy')
-ax.set_title('Layer-wise Attention Entropy: Role-Conditioning Circuits')
+ax.set_title(f'{model_title}: Layer-wise Attention Entropy - Role-Conditioning Circuits')
 ax.legend()
 ax.grid(True, alpha=0.3)
 plt.tight_layout()
@@ -397,7 +437,7 @@ fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
 im1 = ax1.imshow(head_diffs_self_neutral, cmap='RdBu_r', aspect='auto')
 ax1.set_xlabel('Head')
 ax1.set_ylabel('Layer')
-ax1.set_title('Δ = Self - Neutral (Attention Magnitude)')
+ax1.set_title(f'{model_title}: Δ = Self - Neutral (Attention Magnitude)')
 ax1.set_xticks(range(0, n_heads, max(1, n_heads//8)))
 ax1.set_yticks(range(0, n_layers, max(1, n_layers//8)))
 plt.colorbar(im1, ax=ax1)
@@ -406,7 +446,7 @@ plt.colorbar(im1, ax=ax1)
 im2 = ax2.imshow(head_diffs_self_confounder, cmap='RdBu_r', aspect='auto')
 ax2.set_xlabel('Head')
 ax2.set_ylabel('Layer')
-ax2.set_title('Δ = Self - Confounder (Attention Magnitude)')
+ax2.set_title(f'{model_title}: Δ = Self - Confounder (Attention Magnitude)')
 ax2.set_xticks(range(0, n_heads, max(1, n_heads//8)))
 ax2.set_yticks(range(0, n_layers, max(1, n_layers//8)))
 plt.colorbar(im2, ax=ax2)
@@ -487,7 +527,7 @@ for i, data in enumerate(token_attention_data):
     if i == 0:
         ax.legend()
 
-plt.suptitle('Token-Conditioned Attention Patterns: Role-Sensitive Heads', fontsize=14)
+plt.suptitle(f'{model_title}: Token-Conditioned Attention Patterns - Role-Sensitive Heads', fontsize=14)
 plt.tight_layout()
 plt.savefig(f'{output_dir}/visualization_3_token_attention.png', dpi=150, bbox_inches='tight')
 plt.close()
@@ -611,7 +651,7 @@ for i, data in enumerate(violin_data):
     ax.set_title(f'Layer {data["layer"]}, Head {data["head"]}\nCohen\'s d = {effect_sizes[i]:.3f}')
     ax.grid(True, alpha=0.3)
 
-plt.suptitle('Distribution of Attention Entropies: Role-Sensitive Heads', fontsize=14)
+plt.suptitle(f'{model_title}: Distribution of Attention Entropies - Role-Sensitive Heads', fontsize=14)
 plt.tight_layout()
 plt.savefig(f'{output_dir}/visualization_4_distributions.png', dpi=150, bbox_inches='tight')
 plt.close()
@@ -663,7 +703,7 @@ bars2 = ax.bar(x + width/2, layer_deltas_neut, width, label='Neutral - Self', co
 
 ax.set_xlabel('Layer')
 ax.set_ylabel('Δ (Attention Entropy)')
-ax.set_title('Layer-wise Role-Conditioning Effect\n(Positive = Self-referent has lower entropy = more focused attention)')
+ax.set_title(f'{model_title}: Layer-wise Role-Conditioning Effect\n(Positive = Self-referent has lower entropy = more focused attention)')
 ax.set_xticks(x)
 ax.set_xticklabels(layer_labels, rotation=45)
 ax.axhline(y=0, color='black', linestyle='-', alpha=0.3)
@@ -759,7 +799,7 @@ cbar.set_label('Δ = Self - Confounder')
 
 ax.set_xlabel('Layer')
 ax.set_ylabel('Head')
-ax.set_title('Top-3 Most Role-Sensitive Heads Per Layer\n(Size ∝ |Δ|, Color ∝ Δ)')
+ax.set_title(f'{model_title}: Top-3 Most Role-Sensitive Heads Per Layer\n(Size ∝ |Δ|, Color ∝ Δ)')
 ax.set_xticks(range(0, n_layers, 4))
 ax.set_yticks(range(0, n_heads, 4))
 ax.grid(True, alpha=0.3)
@@ -854,7 +894,7 @@ ax2.set_xticklabels([f'L{l}' for l in layers], rotation=45)
 ax2.axhline(y=0, color='black', linestyle='-', alpha=0.3)
 ax2.grid(True, alpha=0.3)
 
-plt.suptitle('Cross-Token Control: Role-Conditioning Effect by Token Position', fontsize=14)
+plt.suptitle(f'{model_title}: Cross-Token Control - Role-Conditioning Effect by Token Position', fontsize=14)
 plt.tight_layout()
 plt.savefig(f'{output_dir}/visualization_7_cross_token_control.png', dpi=150, bbox_inches='tight')
 plt.close()
@@ -899,7 +939,7 @@ for i, (bar, delta) in enumerate(zip(bars, delta_h_per_layer)):
 
 ax.set_xlabel('Layer')
 ax.set_ylabel('ΔH = H_confounder - H_self (Attention Entropy)')
-ax.set_title('Layer-wise Entropy Difference: Confounder vs Self-Referent\n(Expected: Positive band growing through mid/late layers)')
+ax.set_title(f'{model_title}: Layer-wise Entropy Difference - Confounder vs Self-Referent\n(Expected: Positive band growing through mid/late layers)')
 ax.set_xticks(range(len(layer_labels)))
 ax.set_xticklabels(layer_labels, rotation=45)
 ax.axhline(y=0, color='black', linestyle='-', alpha=0.3)
@@ -963,7 +1003,7 @@ x = np.arange(len(layer_labels))
 bars1 = ax1.bar(x, rfc_values, color='green', alpha=0.7, label='RFC')
 ax1.set_xlabel('Layer')
 ax1.set_ylabel('Role-Focus Coefficient (RFC)')
-ax1.set_title('Role-Focus Coefficient: RFC(l) = 1 - H_self(l) / H_neutral(l)')
+ax1.set_title(f'{model_title}: Role-Focus Coefficient - RFC(l) = 1 - H_self(l) / H_neutral(l)')
 ax1.set_xticks(x)
 ax1.set_xticklabels(layer_labels, rotation=45)
 ax1.grid(True, alpha=0.3)
@@ -980,7 +1020,7 @@ for i, (bar, ci) in enumerate(zip(bars1, rfc_cis)):
 bars2 = ax2.bar(x, rsi_values, color='orange', alpha=0.7, label='RSI')
 ax2.set_xlabel('Layer')
 ax2.set_ylabel('Role-Separation Index (RSI)')
-ax2.set_title('Role-Separation Index: RSI(l) = (H_conf(l) - H_self(l)) / H_neutral(l)')
+ax2.set_title(f'{model_title}: Role-Separation Index - RSI(l) = (H_conf(l) - H_self(l)) / H_neutral(l)')
 ax2.set_xticks(x)
 ax2.set_xticklabels(layer_labels, rotation=45)
 ax2.grid(True, alpha=0.3)

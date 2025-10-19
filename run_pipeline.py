@@ -120,7 +120,8 @@ def main():
             "python", "compare_base_instruct.py",
             "--base_dir", comparison_config["base_dir"],
             "--instruct_dir", comparison_config["instruct_dir"],
-            "--output_dir", comparison_config["output_dir"]
+            "--output_dir", comparison_config["output_dir"],
+            "--family", args.family
         ]
         run_command(cmd, f"Base vs Instruct comparison ({args.family})")
     
