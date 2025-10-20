@@ -159,7 +159,7 @@ def compare_models(base_df: pd.DataFrame, instruct_df: pd.DataFrame) -> Dict:
     
     return comparison
 
-def create_comparison_plots(comparison_df: pd.DataFrame, output_dir: str):
+def create_comparison_plots(comparison_df: pd.DataFrame, output_dir: str, model_family_title: str = "Model Comparison"):
     """Create comparison plots between base and instruct models."""
     print("Creating comparison plots...")
     
@@ -183,7 +183,7 @@ def create_comparison_plots(comparison_df: pd.DataFrame, output_dir: str):
     
     ax1.set_xlabel('Layer')
     ax1.set_ylabel('RFC (Role-Focus Coefficient)')
-    ax1.set_title('RFC Comparison: Base vs Instruct Models')
+    ax1.set_title(f'{model_family_title}: RFC Comparison - Base vs Instruct Models')
     ax1.legend()
     ax1.grid(True, alpha=0.3)
     
@@ -199,7 +199,7 @@ def create_comparison_plots(comparison_df: pd.DataFrame, output_dir: str):
     
     ax2.set_xlabel('Layer')
     ax2.set_ylabel('RSI (Role-Separation Index)')
-    ax2.set_title('RSI Comparison: Base vs Instruct Models')
+    ax2.set_title(f'{model_family_title}: RSI Comparison - Base vs Instruct Models')
     ax2.legend()
     ax2.grid(True, alpha=0.3)
     
@@ -217,7 +217,7 @@ def create_comparison_plots(comparison_df: pd.DataFrame, output_dir: str):
     ax1.axhline(y=0, color='black', linestyle='--', alpha=0.5)
     ax1.set_xlabel('Layer')
     ax1.set_ylabel('RFC Difference (Instruct - Base)')
-    ax1.set_title('RFC Difference: Instruct Model - Base Model')
+    ax1.set_title(f'{model_family_title}: RFC Difference - Instruct Model - Base Model')
     ax1.legend()
     ax1.grid(True, alpha=0.3)
     
@@ -228,7 +228,7 @@ def create_comparison_plots(comparison_df: pd.DataFrame, output_dir: str):
     ax2.axhline(y=0, color='black', linestyle='--', alpha=0.5)
     ax2.set_xlabel('Layer')
     ax2.set_ylabel('RSI Difference (Instruct - Base)')
-    ax2.set_title('RSI Difference: Instruct Model - Base Model')
+    ax2.set_title(f'{model_family_title}: RSI Difference - Instruct Model - Base Model')
     ax2.legend()
     ax2.grid(True, alpha=0.3)
     
@@ -302,6 +302,24 @@ def main():
             args.instruct_dir = comparison_config["instruct_dir"]
             args.output_dir = comparison_config["output_dir"]
     
+    # Extract model family for titles
+    def get_model_family_title():
+        """Extract model family for chart titles."""
+        if args.family:
+            return f"{args.family.title()} Models"
+        
+        # Fallback: extract from directory names
+        if "llama" in args.base_dir.lower():
+            return "Llama Models"
+        elif "qwen" in args.base_dir.lower():
+            return "Qwen Models"
+        elif "mistral" in args.base_dir.lower():
+            return "Mistral Models"
+        else:
+            return "Model Comparison"
+    
+    model_family_title = get_model_family_title()
+    
     print("Base vs Instruct Model Comparison")
     print("="*50)
     print(f"Base model data: {args.base_dir}")
@@ -322,7 +340,7 @@ def main():
     comparison_df = compare_models(base_df, instruct_df)
     
     # Create plots
-    create_comparison_plots(comparison_df, args.output_dir)
+    create_comparison_plots(comparison_df, args.output_dir, model_family_title)
     
     # Print summary
     print_summary_stats(comparison_df)
