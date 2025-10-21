@@ -11,14 +11,14 @@ The initial evidence indicates that a native multi-lingual LLM, like Qwen, maint
 [[See Metrics](https://github.com/mduffster/self-referent-test?tab=readme-ov-file#key-metrics)]
 
 ### RFC Differences (Instruct - Base) by Model Family (threshold: ±0.01):
-- **Llama 3.1 8B**: Mean -0.0180 (62.5% layers show significant compression, 18.8% near zero)
+- **Llama 3.1 8B**: Mean -0.0233 (68.8% layers show significant compression, 15.6% near zero)
 - **Mistral 7B**: Mean -0.0934 (81.2% layers show significant compression, 6.2% near zero)  
 - **Qwen 2.5 7B**: Mean +0.0475 (21.4% layers show significant preservation, 50% near zero)
 
 ### Key Finding: **Directional Divergence**
-- **English models** (Llama, Mistral): Show strong compression patterns (62.5% and 81.2% of layers respectively)
+- **English models** (Llama, Mistral): Show strong compression patterns (68.8% and 81.2% of layers respectively)
 - **Multilingual model** (Qwen): Shows preservation in some layers (21.4%) but most layers are unchanged (50% near zero)
-- **Correlation**: Llama vs Mistral show moderate positive correlation (r=0.35, p=0.049)
+- **Correlation**: Llama vs Mistral show moderate positive correlation (r=0., p=0.024)398
 
 ### Interpretation:
 Qwen's multilingual training appears to maintain self-reference circuits largely unchanged after instruction tuning (50% of layers near zero), while English-native models show systematic compression of self-reference processing toward fact-finding (neutral) circuits. This suggests Qwen treats self-reference as a linguistically distinct circuit that instruction tuning doesn't significantly modify.
@@ -40,6 +40,7 @@ Qwen's multilingual training appears to maintain self-reference circuits largely
 ├── visualize_results.py      # Comprehensive visualization suite
 ├── compare_base_instruct.py  # Base vs instruct model comparison
 ├── cross_model_correlation.py  # Cross-model RFC correlation analysis
+├── activation_patching_analysis.py  # Robust activation patching candidate identification
 ├── analyze_results.py        # Results analysis and CSV export
 ├── output_manager.py         # Output file management
 ├── deterministic.py          # Deterministic setup utilities
@@ -63,6 +64,7 @@ Qwen's multilingual training appears to maintain self-reference circuits largely
 ├── results_activation_analysis/  # Mistral analysis results and raw data
 ├── results_llama_activation/     # Llama analysis results and raw data
 ├── results_qwen_activation/      # Qwen analysis results and raw data
+├── activation_patching_results_robust/  # Robust activation patching analysis results
 └── README.md                # This file
 ```
 
@@ -101,6 +103,9 @@ python compare_base_instruct.py --family llama
 
 # Run cross-model correlation analysis
 python cross_model_correlation.py
+
+# Run robust activation patching analysis
+python activation_patching_analysis.py --model_family llama --top_k 10
 ```
 
 **4. Legacy Individual Scripts:**
@@ -198,10 +203,50 @@ python cross_model_correlation.py
 
 This analysis reveals that Qwen's multilingual training maintains self-reference as a linguistically distinct circuit even after instruction tuning, while English-native models shift self-reference processing toward fact-finding (neutral) circuits.
 
+## Robust Activation Patching Analysis
+
+The `activation_patching_analysis.py` script implements a robust methodology to identify specific attention heads that are candidates for activation patching experiments. This analysis uses advanced statistical methods to isolate role-specific effects and avoid false positives.
+
+### Methodology
+
+**Statistics:**
+- **Median aggregation** across prompts
+- **Log-ratios** with data-scaled epsilon
+- **Difference-in-Differences (DiD)** to isolate role-specific effects: `(H_self_instruct - H_self_base) - (H_neutral_instruct - H_neutral_base)`
+
+**Guardrails Against False Positives:**
+- **Consistency scoring**: Fraction of prompts with same direction
+- **Baseline focus**: Prioritizes heads with low baseline entropy (specialized)
+- **Composite scoring**: Balances magnitude, consistency, and baseline focus
+
+### Key Results
+
+**Top Activation Patching Candidates (Robust Methodology):**
+
+**Llama 3.1 8B:**
+- Layer 5, Head 8: DiD -0.0103 ↓, Log-Ratio -0.320, Consistency 0.93
+- Layer 16, Head 23: DiD -0.0039 ↓, Log-Ratio -0.313, Consistency 0.83
+- Layer 14, Head 3: DiD 0.0895 ↑, Log-Ratio 0.286, Consistency 0.97
+
+**Mistral 7B:**
+- Layer 27, Head 5: DiD -0.0616 ↓, Log-Ratio -1.028, Consistency 0.77
+- Layer 9, Head 26: DiD 0.0562 ↑, Log-Ratio 0.647, Consistency 0.83
+- Layer 15, Head 16: DiD 0.1084 ↑, Log-Ratio 0.581, Consistency 0.90
+
+### Usage
+
+```bash
+# Run robust activation patching analysis
+python activation_patching_analysis.py --model_family llama --top_k 10
+python activation_patching_analysis.py --model_family mistral --top_k 10
+```
+
+This analysis provides a much more reliable foundation for activation patching experiments, with clear role-specific effects and defensible statistical measures.
+
 ## Hardware Requirements
 
 - **Tested on**: MacBook Pro M4 (48GB RAM)
-- **Expected runtime**: ~8 minutes for activation analysis (30 prompts/category)
+- **Expected runtime**: ~10-15 minutes per model for activation analysis (30 prompts/category)
 - **Memory**: ~16GB RAM needed for Mistral-7B model loading
 - **Storage**: ~6GB per analysis run
 
@@ -435,19 +480,16 @@ Some early hypotheses about
 - SciPy (for statistical analysis)
 
 ## Future Analysis
-- **Mistral Ablation candidates identified:**
-   - Layer 29, Head 26: |Δ| = 0.261058
-   - Layer 11, Head 2: |Δ| = 0.242495
-   - Layer 26, Head 29: |Δ| = 0.225781
-   - Layer 22, Head 28: |Δ| = 0.195122
-   - Layer 7, Head 9: |Δ| = 0.189944
-- **Intervention experiments** ready to start with graded ablation (0.5 and 0.0)
-- Generation effects analysis
+- **Activation Patching Candidates Identified:**
+   - **Llama**: Layer 5 Head 8, Layer 16 Head 23, Layer 14 Head 3 (top candidates)
+   - **Mistral**: Layer 27 Head 5, Layer 9 Head 26, Layer 15 Head 16 (top candidates)
+   - **Methodology**: Robust DiD analysis with composite scoring (magnitude + consistency + baseline focus)
+- **Activation Patching Experiments** ready to start with identified candidates
 
 ## Research Applications
 
 I hope this framework can be extended to:
-- **Intervention studies** (attention patching, activation editing)
+- **Intervention studies** (activation patching)
 - **Scaling studies** (7B → 70B → 405B parameter models)
 - **Task-specific analysis** (reasoning, planning, tool use)
 - **Safety research** (alignment, goal-seeking behavior)
