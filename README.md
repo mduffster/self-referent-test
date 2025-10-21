@@ -11,14 +11,14 @@ The initial evidence indicates that a native multi-lingual LLM, like Qwen, maint
 [[See Metrics](https://github.com/mduffster/self-referent-test?tab=readme-ov-file#key-metrics)]
 
 ### RFC Differences (Instruct - Base) by Model Family (threshold: ±0.01):
-- **Llama 3.1 8B**: Mean -0.0233 (68.8% layers show significant compression, 15.6% near zero)
-- **Mistral 7B**: Mean -0.0934 (81.2% layers show significant compression, 6.2% near zero)  
-- **Qwen 2.5 7B**: Mean +0.0475 (21.4% layers show significant preservation, 50% near zero)
+- **Llama 3.1 8B**: Mean -0.0233 (68.8% layers show compression, 15.6% near zero)
+- **Mistral 7B**: Mean -0.0934 (81.2% layers show compression, 6.2% near zero)  
+- **Qwen 2.5 7B**: Mean +0.0475 (21.4% layers show preservation, 50% near zero)
 
 ### Key Finding: **Directional Divergence**
-- **English models** (Llama, Mistral): Show strong compression patterns (68.8% and 81.2% of layers respectively)
+- **English models** (Llama, Mistral): Show compression patterns (68.8% and 81.2% of layers respectively)
 - **Multilingual model** (Qwen): Shows preservation in some layers (21.4%) but most layers are unchanged (50% near zero)
-- **Correlation**: Llama vs Mistral show moderate positive correlation (r=0., p=0.024)398
+- **Correlation**: Llama vs Mistral show moderate positive correlation (r=0.398, p=0.024)
 
 ### Interpretation:
 Qwen's multilingual training appears to maintain self-reference circuits largely unchanged after instruction tuning (50% of layers near zero), while English-native models show systematic compression of self-reference processing toward fact-finding (neutral) circuits. This suggests Qwen treats self-reference as a linguistically distinct circuit that instruction tuning doesn't significantly modify.
