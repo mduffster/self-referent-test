@@ -1,0 +1,21 @@
+{
+  "model_family": "mistral",
+  "total_candidates": 10,
+  "mean_did_median": 0.11604489386081696,
+  "std_did_median": 0.09062511473894119,
+  "mean_log_ratio_median": 0.43642719885931236,
+  "std_log_ratio_median": 0.5228523478650625,
+  "mean_consistency": 0.8533333333333333,
+  "mean_composite_score": 5.976964626592071,
+  "layers_with_candidates": [
+    9,
+    15,
+    16,
+    18,
+    19,
+    27
+  ],
+  "top_layer": 27,
+  "top_head": 5,
+  "methodology": "robust_median_log_ratio_did"
+}

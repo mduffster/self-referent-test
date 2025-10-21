@@ -1,15 +1,15 @@
 {
   "summary_stats": {
     "llama": {
-      "mean": -0.018006985907309807,
-      "std": 0.028626419320238683,
-      "min": -0.0741934435708182,
-      "max": 0.0392177381685801,
-      "positive_count": 10,
-      "negative_count": 22,
-      "significant_positive": 6,
-      "significant_negative": 20,
-      "near_zero": 6,
+      "mean": -0.023268680686929385,
+      "std": 0.0298529190217853,
+      "min": -0.0814086986439568,
+      "max": 0.0411363818815776,
+      "positive_count": 8,
+      "negative_count": 24,
+      "significant_positive": 5,
+      "significant_negative": 22,
+      "near_zero": 5,
       "total_layers": 32
     },
     "mistral": {
@@ -39,12 +39,12 @@
   },
   "correlations": {
     "llama_vs_mistral": {
-      "pearson_r": 0.35022361126473195,
-      "pearson_p": 0.04940490721232922,
-      "spearman_r": 0.4002932551319648,
-      "spearman_p": 0.023197202001788854,
+      "pearson_r": 0.39779838923100425,
+      "pearson_p": 0.024150810981455835,
+      "spearman_r": 0.4571114369501466,
+      "spearman_p": 0.008533537511894297,
       "layers_compared": 32
     }
   },
-  "analysis_timestamp": "2025-10-18T09:42:49.155964"
+  "analysis_timestamp": "2025-10-20T10:25:13.044879"
 }

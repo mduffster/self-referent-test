@@ -1,0 +1,23 @@
+{
+  "model_family": "llama",
+  "total_candidates": 10,
+  "mean_did_median": 0.031249186024069786,
+  "std_did_median": 0.03989461064338684,
+  "mean_log_ratio_median": 0.04471163914381303,
+  "std_log_ratio_median": 0.28919617074745246,
+  "mean_consistency": 0.8833333333333334,
+  "mean_composite_score": 6.4439883882174085,
+  "layers_with_candidates": [
+    5,
+    6,
+    9,
+    13,
+    14,
+    16,
+    22,
+    24
+  ],
+  "top_layer": 5,
+  "top_head": 8,
+  "methodology": "robust_median_log_ratio_did"
+}
