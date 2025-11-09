@@ -1,0 +1,3 @@
+test,version,ood_auc,retention,passes
+Lexical_OOD,Base,0.5693779904306221,0.9489633173843702,True
+Lexical_OOD,Instruct,0.32057416267942584,0.5342902711323765,False

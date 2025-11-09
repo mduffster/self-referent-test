@@ -1,0 +1,7 @@
+Model,Version,Baseline_AUC,Post_INLP_Last_Token,Post_INLP_Mid_Token,Has_Non_Lexical_Circuit,Notes
+Llama,Base,1.0,0.6,0.7,Weak,Moderate mid-layer signal
+Llama,Instruct,1.0,0.47,0.68,No,Drops to chance
+Mistral,Base,1.0,0.53,0.77,Weak,Moderate mid-layer signal
+Mistral,Instruct,1.0,0.5,0.88,Weak,"Strong mid-layer, chance at last"
+Qwen,Base,1.0,0.74,0.68,Yes,Strong at last token (0.74)
+Qwen,Instruct,1.0,0.63,0.63,Moderate,"Moderate signal, instruct weakens"
