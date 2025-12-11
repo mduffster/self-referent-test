@@ -1,0 +1,3654 @@
+{
+  "base": [
+    {
+      "layer": 10,
+      "token_pos": "last",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4744514974744771,
+          "inlp_auc_ci": [
+            0.3325626984126985,
+            0.6203814460393408
+          ],
+          "auc_drop": 0.5255485025255229
+        },
+        "self_vs_neutral": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3887102858240983,
+          "inlp_auc_ci": [
+            0.23690945186009144,
+            0.5353734789496747
+          ],
+          "auc_drop": 0.6112897141759017
+        },
+        "self_vs_confounder": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 1.0,
+          "inlp_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "auc_drop": 0.0
+        },
+        "third_vs_neutral": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.6256342352535114,
+          "inlp_auc_ci": [
+            0.47424983839689727,
+            0.7641905875079453
+          ],
+          "auc_drop": 0.37436576474648864
+        },
+        "third_vs_confounder": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.37407067966231905,
+          "inlp_auc_ci": [
+            0.237365320483527,
+            0.5145138524159664
+          ],
+          "auc_drop": 0.625929320337681
+        },
+        "neutral_vs_confounder": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.48567048798127854,
+          "inlp_auc_ci": [
+            0.3451398513251455,
+            0.6261875656593746
+          ],
+          "auc_drop": 0.5143295120187215
+        }
+      },
+      "multiclass": {
+        "layer": 10,
+        "token_pos": "last",
+        "n_samples": 120,
+        "baseline_acc": 1.0
+      }
+    },
+    {
+      "layer": 10,
+      "token_pos": "bos",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.7332077278271729,
+          "baseline_auc_ci": [
+            0.6048614758403362,
+            0.8552272727272727
+          ],
+          "inlp_auc": 0.5025690282138647,
+          "inlp_auc_ci": [
+            0.3489627100840336,
+            0.6478967633928572
+          ],
+          "auc_drop": 0.23063869961330818
+        },
+        "self_vs_neutral": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.7293531294354018,
+          "baseline_auc_ci": [
+            0.5983423876927165,
+            0.8459688902848402
+          ],
+          "inlp_auc": 0.4149118654484081,
+          "inlp_auc_ci": [
+            0.2624860956618465,
+            0.5533971277610042
+          ],
+          "auc_drop": 0.3144412639869937
+        },
+        "self_vs_confounder": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6900749734898125,
+          "baseline_auc_ci": [
+            0.5559209230567227,
+            0.8170402697315771
+          ],
+          "inlp_auc": 0.6890024414651098,
+          "inlp_auc_ci": [
+            0.5487971823498139,
+            0.8187465280583386
+          ],
+          "auc_drop": 0.0010725320247026993
+        },
+        "third_vs_neutral": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.6826909275606297,
+          "baseline_auc_ci": [
+            0.544114705882353,
+            0.8038973396366332
+          ],
+          "inlp_auc": 0.382971559925143,
+          "inlp_auc_ci": [
+            0.25112379768370086,
+            0.5271511437908496
+          ],
+          "auc_drop": 0.2997193676354867
+        },
+        "third_vs_confounder": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.3255451648085649,
+          "baseline_auc_ci": [
+            0.1927049107142857,
+            0.4672004201680673
+          ],
+          "inlp_auc": 0.3217313320182557,
+          "inlp_auc_ci": [
+            0.18741232163840862,
+            0.46053948832035596
+          ],
+          "auc_drop": 0.0038138327903091684
+        },
+        "neutral_vs_confounder": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6990554158692005,
+          "baseline_auc_ci": [
+            0.554938973063973,
+            0.8183015046296297
+          ],
+          "inlp_auc": 0.3721079832643585,
+          "inlp_auc_ci": [
+            0.23712491919844858,
+            0.5300742028179458
+          ],
+          "auc_drop": 0.326947432604842
+        }
+      },
+      "multiclass": {
+        "layer": 10,
+        "token_pos": "bos",
+        "n_samples": 120,
+        "baseline_acc": 0.3416666666666667
+      }
+    },
+    {
+      "layer": 10,
+      "token_pos": "first_content",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.812720811949476,
+          "baseline_auc_ci": [
+            0.6890440867003367,
+            0.9143537929133034
+          ],
+          "inlp_auc": 0.5275948976670206,
+          "inlp_auc_ci": [
+            0.3678019650084867,
+            0.6793232524975523
+          ],
+          "auc_drop": 0.2851259142824554
+        },
+        "self_vs_neutral": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9062788453808555,
+          "baseline_auc_ci": [
+            0.8212265625,
+            0.9701063715132711
+          ],
+          "inlp_auc": 0.3859788205854675,
+          "inlp_auc_ci": [
+            0.23698272913816693,
+            0.5348028273809523
+          ],
+          "auc_drop": 0.520300024795388
+        },
+        "self_vs_confounder": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.7527154602166187,
+          "baseline_auc_ci": [
+            0.62056436763468,
+            0.878351314484127
+          ],
+          "inlp_auc": 0.7514332006005893,
+          "inlp_auc_ci": [
+            0.6126688825256532,
+            0.8732505980861244
+          ],
+          "auc_drop": 0.0012822596160294575
+        },
+        "third_vs_neutral": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9047417763213461,
+          "baseline_auc_ci": [
+            0.7869783359914939,
+            1.0
+          ],
+          "inlp_auc": 0.4896882753273202,
+          "inlp_auc_ci": [
+            0.33136825956391175,
+            0.6397651515151515
+          ],
+          "auc_drop": 0.41505350099402594
+        },
+        "third_vs_confounder": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.10077537769257647,
+          "baseline_auc_ci": [
+            0.022284126984127,
+            0.2033566217732884
+          ],
+          "inlp_auc": 0.10245454232638838,
+          "inlp_auc_ci": [
+            0.018647463194031825,
+            0.20561111111111105
+          ],
+          "auc_drop": -0.0016791646338119165
+        },
+        "neutral_vs_confounder": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9045827220082174,
+          "baseline_auc_ci": [
+            0.7879248013499659,
+            1.0
+          ],
+          "inlp_auc": 0.3907853660266452,
+          "inlp_auc_ci": [
+            0.2527133322739552,
+            0.5474525345622119
+          ],
+          "auc_drop": 0.5137973559815723
+        }
+      },
+      "multiclass": {
+        "layer": 10,
+        "token_pos": "first_content",
+        "n_samples": 120,
+        "baseline_acc": 0.4
+      }
+    },
+    {
+      "layer": 10,
+      "token_pos": "mid",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.9955869542942899,
+          "baseline_auc_ci": [
+            0.9820574162679426,
+            1.0
+          ],
+          "inlp_auc": 0.426956725428406,
+          "inlp_auc_ci": [
+            0.2791905609407278,
+            0.588197544642857
+          ],
+          "auc_drop": 0.5686302288658839
+        },
+        "self_vs_neutral": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.36596712893697464,
+          "inlp_auc_ci": [
+            0.2188525883838384,
+            0.5039574589340029
+          ],
+          "auc_drop": 0.6340328710630254
+        },
+        "self_vs_confounder": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 1.0,
+          "inlp_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "auc_drop": 0.0
+        },
+        "third_vs_neutral": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.39899344454965113,
+          "inlp_auc_ci": [
+            0.25569382647385985,
+            0.5506242738845631
+          ],
+          "auc_drop": 0.6010065554503489
+        },
+        "third_vs_confounder": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9957683243314738,
+          "baseline_auc_ci": [
+            0.9823693972542935,
+            1.0
+          ],
+          "inlp_auc": 0.42479982495206214,
+          "inlp_auc_ci": [
+            0.2814167805498173,
+            0.5714285714285714
+          ],
+          "auc_drop": 0.5709684993794116
+        },
+        "neutral_vs_confounder": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3342287644899152,
+          "inlp_auc_ci": [
+            0.20125139043381532,
+            0.4819563489320522
+          ],
+          "auc_drop": 0.6657712355100849
+        }
+      },
+      "multiclass": {
+        "layer": 10,
+        "token_pos": "mid",
+        "n_samples": 120,
+        "baseline_acc": 0.9666666666666668
+      }
+    },
+    {
+      "layer": 15,
+      "token_pos": "last",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4941572285337047,
+          "inlp_auc_ci": [
+            0.33249823778195486,
+            0.6335258129948308
+          ],
+          "auc_drop": 0.5058427714662953
+        },
+        "self_vs_neutral": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.465947198683553,
+          "inlp_auc_ci": [
+            0.31578045112781955,
+            0.6187891476034858
+          ],
+          "auc_drop": 0.534052801316447
+        },
+        "self_vs_confounder": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 1.0,
+          "inlp_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "auc_drop": 0.0
+        },
+        "third_vs_neutral": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4479133508756643,
+          "inlp_auc_ci": [
+            0.2878465332892416,
+            0.603820649955244
+          ],
+          "auc_drop": 0.5520866491243357
+        },
+        "third_vs_confounder": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4185306893946706,
+          "inlp_auc_ci": [
+            0.2703596979332274,
+            0.5684246993479475
+          ],
+          "auc_drop": 0.5814693106053295
+        },
+        "neutral_vs_confounder": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4167166792162296,
+          "inlp_auc_ci": [
+            0.26331565656565653,
+            0.575244633838384
+          ],
+          "auc_drop": 0.5832833207837704
+        }
+      },
+      "multiclass": {
+        "layer": 15,
+        "token_pos": "last",
+        "n_samples": 120,
+        "baseline_acc": 1.0
+      }
+    },
+    {
+      "layer": 15,
+      "token_pos": "bos",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.7317987990183805,
+          "baseline_auc_ci": [
+            0.5950996829314318,
+            0.8509872080088987
+          ],
+          "inlp_auc": 0.5125706590215504,
+          "inlp_auc_ci": [
+            0.36938870936153545,
+            0.6572822117167222
+          ],
+          "auc_drop": 0.2192281399968301
+        },
+        "self_vs_neutral": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.7247741752403205,
+          "baseline_auc_ci": [
+            0.5954566592261904,
+            0.8574813297977926
+          ],
+          "inlp_auc": 0.41531599009619846,
+          "inlp_auc_ci": [
+            0.26225214045214046,
+            0.5647406468496743
+          ],
+          "auc_drop": 0.30945818514412204
+        },
+        "self_vs_confounder": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6757231817429656,
+          "baseline_auc_ci": [
+            0.5316636029411765,
+            0.8009463128966826
+          ],
+          "inlp_auc": 0.6823984550881332,
+          "inlp_auc_ci": [
+            0.5458092733756462,
+            0.8120055555555556
+          ],
+          "auc_drop": -0.006675273345167598
+        },
+        "third_vs_neutral": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.6822317732523341,
+          "baseline_auc_ci": [
+            0.5365470204989671,
+            0.8025697730861671
+          ],
+          "inlp_auc": 0.33276259322243773,
+          "inlp_auc_ci": [
+            0.1928371848739496,
+            0.47775305895439374
+          ],
+          "auc_drop": 0.34946918002989635
+        },
+        "third_vs_confounder": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.3231365462247868,
+          "baseline_auc_ci": [
+            0.19510996695674937,
+            0.4633064516129033
+          ],
+          "inlp_auc": 0.3268879988733647,
+          "inlp_auc_ci": [
+            0.19774404761904762,
+            0.47119140624999994
+          ],
+          "auc_drop": -0.003751452648577902
+        },
+        "neutral_vs_confounder": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6815121714808363,
+          "baseline_auc_ci": [
+            0.5394270382729782,
+            0.8040056729699667
+          ],
+          "inlp_auc": 0.3610242756653468,
+          "inlp_auc_ci": [
+            0.23026238839285718,
+            0.5000139508928572
+          ],
+          "auc_drop": 0.32048789581548953
+        }
+      },
+      "multiclass": {
+        "layer": 15,
+        "token_pos": "bos",
+        "n_samples": 120,
+        "baseline_acc": 0.3416666666666667
+      }
+    },
+    {
+      "layer": 15,
+      "token_pos": "first_content",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.7950369345809524,
+          "baseline_auc_ci": [
+            0.6698550537223307,
+            0.9032284946236558
+          ],
+          "inlp_auc": 0.5373083325856153,
+          "inlp_auc_ci": [
+            0.3938832772166105,
+            0.6852073360281266
+          ],
+          "auc_drop": 0.2577286019953371
+        },
+        "self_vs_neutral": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.90077541329247,
+          "baseline_auc_ci": [
+            0.8094780219780219,
+            0.9659765656036469
+          ],
+          "inlp_auc": 0.5032412289783356,
+          "inlp_auc_ci": [
+            0.34911840139837913,
+            0.6615781097868054
+          ],
+          "auc_drop": 0.39753418431413445
+        },
+        "self_vs_confounder": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.7514554541219697,
+          "baseline_auc_ci": [
+            0.6171553694843168,
+            0.8777951388888888
+          ],
+          "inlp_auc": 0.7540218393567423,
+          "inlp_auc_ci": [
+            0.6068440853264383,
+            0.8850613839285714
+          ],
+          "auc_drop": -0.0025663852347725946
+        },
+        "third_vs_neutral": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9059009497794548,
+          "baseline_auc_ci": [
+            0.7990789592352092,
+            1.0
+          ],
+          "inlp_auc": 0.5474161495320523,
+          "inlp_auc_ci": [
+            0.3983944840562487,
+            0.7017714285714285
+          ],
+          "auc_drop": 0.3584848002474025
+        },
+        "third_vs_confounder": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.1163947709591304,
+          "baseline_auc_ci": [
+            0.025627990430622007,
+            0.24254608874556957
+          ],
+          "inlp_auc": 0.11548123236820439,
+          "inlp_auc_ci": [
+            0.027407449903038165,
+            0.225283083634594
+          ],
+          "auc_drop": 0.000913538590926008
+        },
+        "neutral_vs_confounder": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9048880273163786,
+          "baseline_auc_ci": [
+            0.7923828125,
+            1.0
+          ],
+          "inlp_auc": 0.5395805503760155,
+          "inlp_auc_ci": [
+            0.390850024050024,
+            0.6923076923076923
+          ],
+          "auc_drop": 0.36530747694036314
+        }
+      },
+      "multiclass": {
+        "layer": 15,
+        "token_pos": "first_content",
+        "n_samples": 120,
+        "baseline_acc": 0.4
+      }
+    },
+    {
+      "layer": 15,
+      "token_pos": "mid",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.9921864957707208,
+          "baseline_auc_ci": [
+            0.9733014361194979,
+            1.0
+          ],
+          "inlp_auc": 0.47060585485665773,
+          "inlp_auc_ci": [
+            0.32702094920281793,
+            0.6139625420875421
+          ],
+          "auc_drop": 0.5215806409140631
+        },
+        "self_vs_neutral": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.43760676006314725,
+          "inlp_auc_ci": [
+            0.28506787330316746,
+            0.5906806016237247
+          ],
+          "auc_drop": 0.5623932399368528
+        },
+        "self_vs_confounder": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9989165128244217,
+          "baseline_auc_ci": [
+            0.9933253590298744,
+            1.0
+          ],
+          "inlp_auc": 0.9988623459859751,
+          "inlp_auc_ci": [
+            0.9932659932659933,
+            1.0
+          ],
+          "auc_drop": 5.4166838446612076e-05
+        },
+        "third_vs_neutral": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.39818945999850075,
+          "inlp_auc_ci": [
+            0.26284126984126976,
+            0.5497780088466363
+          ],
+          "auc_drop": 0.6018105400014993
+        },
+        "third_vs_confounder": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9967204142936178,
+          "baseline_auc_ci": [
+            0.9864253393665159,
+            1.0
+          ],
+          "inlp_auc": 0.4728261351813056,
+          "inlp_auc_ci": [
+            0.32011344304128775,
+            0.6218293427414673
+          ],
+          "auc_drop": 0.5238942791123122
+        },
+        "neutral_vs_confounder": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3630126872881532,
+          "inlp_auc_ci": [
+            0.2217010241596639,
+            0.5200301339285713
+          ],
+          "auc_drop": 0.6369873127118468
+        }
+      },
+      "multiclass": {
+        "layer": 15,
+        "token_pos": "mid",
+        "n_samples": 120,
+        "baseline_acc": 0.95
+      }
+    },
+    {
+      "layer": 20,
+      "token_pos": "last",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.537480292550198,
+          "inlp_auc_ci": [
+            0.39245005875440653,
+            0.6841008297303691
+          ],
+          "auc_drop": 0.462519707449802
+        },
+        "self_vs_neutral": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.42545049773671445,
+          "inlp_auc_ci": [
+            0.2788642113095238,
+            0.5780912615324216
+          ],
+          "auc_drop": 0.5745495022632856
+        },
+        "self_vs_confounder": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 1.0,
+          "inlp_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "auc_drop": 0.0
+        },
+        "third_vs_neutral": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4380573089310424,
+          "inlp_auc_ci": [
+            0.3019629726890757,
+            0.5893823529411765
+          ],
+          "auc_drop": 0.5619426910689576
+        },
+        "third_vs_confounder": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3862503444188942,
+          "inlp_auc_ci": [
+            0.24248997202278624,
+            0.5372652935136577
+          ],
+          "auc_drop": 0.6137496555811057
+        },
+        "neutral_vs_confounder": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.476214172782981,
+          "inlp_auc_ci": [
+            0.3113579510467981,
+            0.6327788784454816
+          ],
+          "auc_drop": 0.523785827217019
+        }
+      },
+      "multiclass": {
+        "layer": 20,
+        "token_pos": "last",
+        "n_samples": 120,
+        "baseline_acc": 0.9916666666666668
+      }
+    },
+    {
+      "layer": 20,
+      "token_pos": "bos",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.7437126028155843,
+          "baseline_auc_ci": [
+            0.6087800774421978,
+            0.8559689469781238
+          ],
+          "inlp_auc": 0.5166311248085553,
+          "inlp_auc_ci": [
+            0.36254146860764513,
+            0.6600925513302965
+          ],
+          "auc_drop": 0.22708147800702894
+        },
+        "self_vs_neutral": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.7279967126770214,
+          "baseline_auc_ci": [
+            0.5722946596168362,
+            0.8506895424836602
+          ],
+          "inlp_auc": 0.4213158193558346,
+          "inlp_auc_ci": [
+            0.2810803591291912,
+            0.5853934151785715
+          ],
+          "auc_drop": 0.30668089332118675
+        },
+        "self_vs_confounder": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6796986567654003,
+          "baseline_auc_ci": [
+            0.5349584755777311,
+            0.8092091750841751
+          ],
+          "inlp_auc": 0.6807809814948248,
+          "inlp_auc_ci": [
+            0.5438997862129364,
+            0.8085731922398589
+          ],
+          "auc_drop": -0.0010823247294244887
+        },
+        "third_vs_neutral": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.6922200429404788,
+          "baseline_auc_ci": [
+            0.5633480392156863,
+            0.8167540849673203
+          ],
+          "inlp_auc": 0.33145609468061193,
+          "inlp_auc_ci": [
+            0.18517330109126987,
+            0.4788798819676183
+          ],
+          "auc_drop": 0.36076394825986685
+        },
+        "third_vs_confounder": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.3231179505738695,
+          "baseline_auc_ci": [
+            0.1905345238095238,
+            0.46998216973107376
+          ],
+          "inlp_auc": 0.32822277217690465,
+          "inlp_auc_ci": [
+            0.2025673400673401,
+            0.4677423916216611
+          ],
+          "auc_drop": -0.005104821603035159
+        },
+        "neutral_vs_confounder": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6837809200109882,
+          "baseline_auc_ci": [
+            0.544312075366763,
+            0.811405062671367
+          ],
+          "inlp_auc": 0.39470893585033967,
+          "inlp_auc_ci": [
+            0.25168269230769236,
+            0.5412124582869855
+          ],
+          "auc_drop": 0.28907198416064855
+        }
+      },
+      "multiclass": {
+        "layer": 20,
+        "token_pos": "bos",
+        "n_samples": 120,
+        "baseline_acc": 0.3416666666666667
+      }
+    },
+    {
+      "layer": 20,
+      "token_pos": "first_content",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.8227282652650074,
+          "baseline_auc_ci": [
+            0.6941561111585783,
+            0.9265850945494994
+          ],
+          "inlp_auc": 0.5103434438823076,
+          "inlp_auc_ci": [
+            0.3630563944327731,
+            0.6520922840775781
+          ],
+          "auc_drop": 0.31238482138269985
+        },
+        "self_vs_neutral": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9014626560463123,
+          "baseline_auc_ci": [
+            0.8175472747497219,
+            0.96875
+          ],
+          "inlp_auc": 0.44616677799964655,
+          "inlp_auc_ci": [
+            0.3068041526374859,
+            0.5904195188492063
+          ],
+          "auc_drop": 0.4552958780466657
+        },
+        "self_vs_confounder": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.7552563262301392,
+          "baseline_auc_ci": [
+            0.6244337822671158,
+            0.8761274553571429
+          ],
+          "inlp_auc": 0.7543120750788822,
+          "inlp_auc_ci": [
+            0.620341435185185,
+            0.8852332852332853
+          ],
+          "auc_drop": 0.0009442511512569585
+        },
+        "third_vs_neutral": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9083862850664449,
+          "baseline_auc_ci": [
+            0.8012908098845598,
+            1.0
+          ],
+          "inlp_auc": 0.432442454099653,
+          "inlp_auc_ci": [
+            0.28083269829775614,
+            0.5863607142857142
+          ],
+          "auc_drop": 0.47594383096679194
+        },
+        "third_vs_confounder": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.12938663737696893,
+          "baseline_auc_ci": [
+            0.029699999999999987,
+            0.24780280420705547
+          ],
+          "inlp_auc": 0.130148493420229,
+          "inlp_auc_ci": [
+            0.03721759259259258,
+            0.2511670386904761
+          ],
+          "auc_drop": -0.0007618560432600674
+        },
+        "neutral_vs_confounder": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9078313702728692,
+          "baseline_auc_ci": [
+            0.8045381613756613,
+            1.0
+          ],
+          "inlp_auc": 0.4549825252587384,
+          "inlp_auc_ci": [
+            0.3135899076851263,
+            0.6057229437229437
+          ],
+          "auc_drop": 0.4528488450141308
+        }
+      },
+      "multiclass": {
+        "layer": 20,
+        "token_pos": "first_content",
+        "n_samples": 120,
+        "baseline_acc": 0.4166666666666667
+      }
+    },
+    {
+      "layer": 20,
+      "token_pos": "mid",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.9954508522121843,
+          "baseline_auc_ci": [
+            0.9822024471635151,
+            1.0
+          ],
+          "inlp_auc": 0.4469367216126137,
+          "inlp_auc_ci": [
+            0.3121823623803162,
+            0.5929027043937708
+          ],
+          "auc_drop": 0.5485141305995707
+        },
+        "self_vs_neutral": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3861108506858537,
+          "inlp_auc_ci": [
+            0.24439781620771203,
+            0.5424499834656084
+          ],
+          "auc_drop": 0.6138891493141463
+        },
+        "self_vs_confounder": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.995512239044188,
+          "baseline_auc_ci": [
+            0.9822009574129986,
+            1.0
+          ],
+          "inlp_auc": 0.9954321678665617,
+          "inlp_auc_ci": [
+            0.9821403519320185,
+            1.0
+          ],
+          "auc_drop": 8.007117762620641e-05
+        },
+        "third_vs_neutral": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.37529888064052114,
+          "inlp_auc_ci": [
+            0.2299642857142857,
+            0.5212002232142856
+          ],
+          "auc_drop": 0.6247011193594789
+        },
+        "third_vs_confounder": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9989138294580603,
+          "baseline_auc_ci": [
+            0.9933333333333334,
+            1.0
+          ],
+          "inlp_auc": 0.3747067192380874,
+          "inlp_auc_ci": [
+            0.22764271574014225,
+            0.5280533482142857
+          ],
+          "auc_drop": 0.6242071102199729
+        },
+        "neutral_vs_confounder": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3670836465612971,
+          "inlp_auc_ci": [
+            0.23097970339067217,
+            0.5211565549022723
+          ],
+          "auc_drop": 0.6329163534387029
+        }
+      },
+      "multiclass": {
+        "layer": 20,
+        "token_pos": "mid",
+        "n_samples": 120,
+        "baseline_acc": 0.9583333333333334
+      }
+    },
+    {
+      "layer": 25,
+      "token_pos": "last",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.5362021984721489,
+          "inlp_auc_ci": [
+            0.390625,
+            0.6936307519640852
+          ],
+          "auc_drop": 0.4637978015278511
+        },
+        "self_vs_neutral": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4690895247836703,
+          "inlp_auc_ci": [
+            0.3214601620848562,
+            0.6196284159576707
+          ],
+          "auc_drop": 0.5309104752163297
+        },
+        "self_vs_confounder": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9978482069928147,
+          "baseline_auc_ci": [
+            0.9899539479617604,
+            1.0
+          ],
+          "inlp_auc": 0.997649882914751,
+          "inlp_auc_ci": [
+            0.9888377199575116,
+            1.0
+          ],
+          "auc_drop": 0.00019832407806374963
+        },
+        "third_vs_neutral": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.626223897160501,
+          "inlp_auc_ci": [
+            0.48157733901866273,
+            0.7608570545956039
+          ],
+          "auc_drop": 0.373776102839499
+        },
+        "third_vs_confounder": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9988928639181525,
+          "baseline_auc_ci": [
+            0.993212669683258,
+            1.0
+          ],
+          "inlp_auc": 0.44516326041529175,
+          "inlp_auc_ci": [
+            0.3002119778199741,
+            0.5948933782267115
+          ],
+          "auc_drop": 0.5537296035028607
+        },
+        "neutral_vs_confounder": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3522158365936885,
+          "inlp_auc_ci": [
+            0.2115101809954751,
+            0.4960717194570135
+          ],
+          "auc_drop": 0.6477841634063115
+        }
+      },
+      "multiclass": {
+        "layer": 25,
+        "token_pos": "last",
+        "n_samples": 120,
+        "baseline_acc": 0.9666666666666666
+      }
+    },
+    {
+      "layer": 25,
+      "token_pos": "bos",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.7341064971267094,
+          "baseline_auc_ci": [
+            0.5894142156862745,
+            0.851602692227475
+          ],
+          "inlp_auc": 0.49941724060218157,
+          "inlp_auc_ci": [
+            0.3614882823765089,
+            0.6499017957351291
+          ],
+          "auc_drop": 0.23468925652452782
+        },
+        "self_vs_neutral": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.7289984494156667,
+          "baseline_auc_ci": [
+            0.5933018973214285,
+            0.8454313616071428
+          ],
+          "inlp_auc": 0.4057854086899682,
+          "inlp_auc_ci": [
+            0.25246913580246916,
+            0.5478349269525663
+          ],
+          "auc_drop": 0.3232130407256985
+        },
+        "self_vs_confounder": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6859139432318451,
+          "baseline_auc_ci": [
+            0.5462160844556678,
+            0.8109197656772985
+          ],
+          "inlp_auc": 0.6865122696297429,
+          "inlp_auc_ci": [
+            0.5415032321734212,
+            0.8217304687499999
+          ],
+          "auc_drop": -0.0005983263978978082
+        },
+        "third_vs_neutral": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.6855031551853833,
+          "baseline_auc_ci": [
+            0.5450361512791991,
+            0.8063616071428571
+          ],
+          "inlp_auc": 0.37806976638150397,
+          "inlp_auc_ci": [
+            0.23022799846807201,
+            0.5223720800889876
+          ],
+          "auc_drop": 0.3074333888038793
+        },
+        "third_vs_confounder": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.3228789391951193,
+          "baseline_auc_ci": [
+            0.1823059764309764,
+            0.4708257959648393
+          ],
+          "inlp_auc": 0.31979721531908994,
+          "inlp_auc_ci": [
+            0.18409110122358174,
+            0.46097630718954247
+          ],
+          "auc_drop": 0.003081723876029341
+        },
+        "neutral_vs_confounder": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6802368421673803,
+          "baseline_auc_ci": [
+            0.537352270968962,
+            0.803920238095238
+          ],
+          "inlp_auc": 0.3987051923149328,
+          "inlp_auc_ci": [
+            0.25532990266026967,
+            0.5422548363095239
+          ],
+          "auc_drop": 0.28153164985244755
+        }
+      },
+      "multiclass": {
+        "layer": 25,
+        "token_pos": "bos",
+        "n_samples": 120,
+        "baseline_acc": 0.3416666666666667
+      }
+    },
+    {
+      "layer": 25,
+      "token_pos": "first_content",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.8278966480950238,
+          "baseline_auc_ci": [
+            0.7124484427609429,
+            0.9338504088504087
+          ],
+          "inlp_auc": 0.5036624453881935,
+          "inlp_auc_ci": [
+            0.34835069444444444,
+            0.6566813222079589
+          ],
+          "auc_drop": 0.32423420270683034
+        },
+        "self_vs_neutral": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9135612111088246,
+          "baseline_auc_ci": [
+            0.8327581369248036,
+            0.9754464285714285
+          ],
+          "inlp_auc": 0.5064028878877109,
+          "inlp_auc_ci": [
+            0.34996040723981897,
+            0.6594571428571429
+          ],
+          "auc_drop": 0.40715832322111367
+        },
+        "self_vs_confounder": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.7394639080243365,
+          "baseline_auc_ci": [
+            0.6017519466073414,
+            0.8727788042549556
+          ],
+          "inlp_auc": 0.7397825348180029,
+          "inlp_auc_ci": [
+            0.5950613644790508,
+            0.8605100446428571
+          ],
+          "auc_drop": -0.0003186267936664544
+        },
+        "third_vs_neutral": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9051637919028176,
+          "baseline_auc_ci": [
+            0.7895386554621849,
+            1.0
+          ],
+          "inlp_auc": 0.5435601711380523,
+          "inlp_auc_ci": [
+            0.3905411175155335,
+            0.702635613297378
+          ],
+          "auc_drop": 0.36160362076476527
+        },
+        "third_vs_confounder": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.1062630091627794,
+          "baseline_auc_ci": [
+            0.034658280132495875,
+            0.20168617908787542
+          ],
+          "inlp_auc": 0.10809446372344346,
+          "inlp_auc_ci": [
+            0.029014632936507936,
+            0.2005779389880952
+          ],
+          "auc_drop": -0.001831454560664053
+        },
+        "neutral_vs_confounder": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9098577589466524,
+          "baseline_auc_ci": [
+            0.8001789189713783,
+            1.0
+          ],
+          "inlp_auc": 0.48766873447437203,
+          "inlp_auc_ci": [
+            0.3358777777777778,
+            0.6400011574074073
+          ],
+          "auc_drop": 0.4221890244722804
+        }
+      },
+      "multiclass": {
+        "layer": 25,
+        "token_pos": "first_content",
+        "n_samples": 120,
+        "baseline_acc": 0.4166666666666667
+      }
+    },
+    {
+      "layer": 25,
+      "token_pos": "mid",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.9902085307357239,
+          "baseline_auc_ci": [
+            0.9683120915032681,
+            1.0
+          ],
+          "inlp_auc": 0.43989459392207175,
+          "inlp_auc_ci": [
+            0.29302796758302874,
+            0.5911481481481481
+          ],
+          "auc_drop": 0.5503139368136521
+        },
+        "self_vs_neutral": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4252952376451427,
+          "inlp_auc_ci": [
+            0.2765488839285714,
+            0.5758022937710436
+          ],
+          "auc_drop": 0.5747047623548573
+        },
+        "self_vs_confounder": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9891488666365631,
+          "baseline_auc_ci": [
+            0.9644315997863564,
+            1.0
+          ],
+          "inlp_auc": 0.9886398796137917,
+          "inlp_auc_ci": [
+            0.9664122365900383,
+            1.0
+          ],
+          "auc_drop": 0.0005089870227713567
+        },
+        "third_vs_neutral": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3532258308585202,
+          "inlp_auc_ci": [
+            0.2202352502284284,
+            0.49537499999999995
+          ],
+          "auc_drop": 0.6467741691414798
+        },
+        "third_vs_confounder": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9835729789348245,
+          "baseline_auc_ci": [
+            0.9566172890513268,
+            1.0
+          ],
+          "inlp_auc": 0.3936702061022585,
+          "inlp_auc_ci": [
+            0.250273569023569,
+            0.5309692894251716
+          ],
+          "auc_drop": 0.5899027728325661
+        },
+        "neutral_vs_confounder": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3628025782369513,
+          "inlp_auc_ci": [
+            0.22988685215247714,
+            0.5125547150411282
+          ],
+          "auc_drop": 0.6371974217630487
+        }
+      },
+      "multiclass": {
+        "layer": 25,
+        "token_pos": "mid",
+        "n_samples": 120,
+        "baseline_acc": 0.9166666666666666
+      }
+    }
+  ],
+  "instruct": [
+    {
+      "layer": 10,
+      "token_pos": "last",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.5315658566241966,
+          "inlp_auc_ci": [
+            0.38157143867162246,
+            0.6820105406746031
+          ],
+          "auc_drop": 0.46843414337580336
+        },
+        "self_vs_neutral": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.44824683309406194,
+          "inlp_auc_ci": [
+            0.30655420168067227,
+            0.6018353726362624
+          ],
+          "auc_drop": 0.5517531669059381
+        },
+        "self_vs_confounder": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 1.0,
+          "inlp_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "auc_drop": 0.0
+        },
+        "third_vs_neutral": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.453177128690305,
+          "inlp_auc_ci": [
+            0.2993955823931352,
+            0.607501633986928
+          ],
+          "auc_drop": 0.546822871309695
+        },
+        "third_vs_confounder": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4143962935418895,
+          "inlp_auc_ci": [
+            0.27963767456521077,
+            0.5628952380952381
+          ],
+          "auc_drop": 0.5856037064581106
+        },
+        "neutral_vs_confounder": {
+          "layer": 10,
+          "token_pos": "last",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.44882951137772126,
+          "inlp_auc_ci": [
+            0.3099928571428571,
+            0.5977884399551066
+          ],
+          "auc_drop": 0.5511704886222788
+        }
+      },
+      "multiclass": {
+        "layer": 10,
+        "token_pos": "last",
+        "n_samples": 120,
+        "baseline_acc": 1.0
+      }
+    },
+    {
+      "layer": 10,
+      "token_pos": "bos",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.7314834507951846,
+          "baseline_auc_ci": [
+            0.595659189222593,
+            0.8412037037037038
+          ],
+          "inlp_auc": 0.5079581131210662,
+          "inlp_auc_ci": [
+            0.3566465311004785,
+            0.6554499761639918
+          ],
+          "auc_drop": 0.22352533767411842
+        },
+        "self_vs_neutral": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.7279879447169187,
+          "baseline_auc_ci": [
+            0.5939716890803848,
+            0.8558015850945494
+          ],
+          "inlp_auc": 0.4137409255818296,
+          "inlp_auc_ci": [
+            0.26131176829706243,
+            0.5780379028379028
+          ],
+          "auc_drop": 0.3142470191350891
+        },
+        "self_vs_confounder": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6784049149938387,
+          "baseline_auc_ci": [
+            0.5339265850945496,
+            0.8109057677072383
+          ],
+          "inlp_auc": 0.6780624557662563,
+          "inlp_auc_ci": [
+            0.5278431299603175,
+            0.8075671686489262
+          ],
+          "auc_drop": 0.000342459227582359
+        },
+        "third_vs_neutral": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.6820266185394248,
+          "baseline_auc_ci": [
+            0.5478229329722819,
+            0.8059014098741399
+          ],
+          "inlp_auc": 0.340123521523832,
+          "inlp_auc_ci": [
+            0.20696710212250294,
+            0.4760203704761243
+          ],
+          "auc_drop": 0.3419030970155928
+        },
+        "third_vs_confounder": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.3236964422948106,
+          "baseline_auc_ci": [
+            0.18966013490485129,
+            0.4685790193602694
+          ],
+          "inlp_auc": 0.32432317755530304,
+          "inlp_auc_ci": [
+            0.19094721383859067,
+            0.4671064482609646
+          ],
+          "auc_drop": -0.0006267352604924503
+        },
+        "neutral_vs_confounder": {
+          "layer": 10,
+          "token_pos": "bos",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6791267340055678,
+          "baseline_auc_ci": [
+            0.5349186507936508,
+            0.8045906245034166
+          ],
+          "inlp_auc": 0.3672611794043836,
+          "inlp_auc_ci": [
+            0.2291573660714286,
+            0.5133309373428858
+          ],
+          "auc_drop": 0.3118655546011842
+        }
+      },
+      "multiclass": {
+        "layer": 10,
+        "token_pos": "bos",
+        "n_samples": 120,
+        "baseline_acc": 0.3416666666666667
+      }
+    },
+    {
+      "layer": 10,
+      "token_pos": "first_content",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.8067144227674061,
+          "baseline_auc_ci": [
+            0.6789930555555554,
+            0.9163279547930282
+          ],
+          "inlp_auc": 0.4517218862470017,
+          "inlp_auc_ci": [
+            0.30130001653439153,
+            0.610776151742677
+          ],
+          "auc_drop": 0.3549925365204044
+        },
+        "self_vs_neutral": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9013883382177469,
+          "baseline_auc_ci": [
+            0.8169896425095344,
+            0.9699805339265851
+          ],
+          "inlp_auc": 0.4795753050274263,
+          "inlp_auc_ci": [
+            0.3307320146958305,
+            0.6255978991596639
+          ],
+          "auc_drop": 0.4218130331903206
+        },
+        "self_vs_confounder": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.7540422317423222,
+          "baseline_auc_ci": [
+            0.6217257021690769,
+            0.8732322296004165
+          ],
+          "inlp_auc": 0.7494284235814148,
+          "inlp_auc_ci": [
+            0.6071590955906861,
+            0.8821829405162737
+          ],
+          "auc_drop": 0.0046138081609073955
+        },
+        "third_vs_neutral": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9044055796615187,
+          "baseline_auc_ci": [
+            0.7851270803270803,
+            1.0
+          ],
+          "inlp_auc": 0.5098559614790888,
+          "inlp_auc_ci": [
+            0.3577,
+            0.668529244743579
+          ],
+          "auc_drop": 0.39454961818242984
+        },
+        "third_vs_confounder": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.09590311954170191,
+          "baseline_auc_ci": [
+            0.02231956638328301,
+            0.18914930169323937
+          ],
+          "inlp_auc": 0.09597317167068138,
+          "inlp_auc_ci": [
+            0.023358639228772692,
+            0.1932908339617899
+          ],
+          "auc_drop": -7.0052128979467e-05
+        },
+        "neutral_vs_confounder": {
+          "layer": 10,
+          "token_pos": "first_content",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9045539913566344,
+          "baseline_auc_ci": [
+            0.7907856769813292,
+            1.0
+          ],
+          "inlp_auc": 0.3530132424866046,
+          "inlp_auc_ci": [
+            0.21315714386716225,
+            0.5028560218658592
+          ],
+          "auc_drop": 0.5515407488700298
+        }
+      },
+      "multiclass": {
+        "layer": 10,
+        "token_pos": "first_content",
+        "n_samples": 120,
+        "baseline_acc": 0.4
+      }
+    },
+    {
+      "layer": 10,
+      "token_pos": "mid",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.9943714129388184,
+          "baseline_auc_ci": [
+            0.9775533108866442,
+            1.0
+          ],
+          "inlp_auc": 0.4310813757836329,
+          "inlp_auc_ci": [
+            0.2869658783766779,
+            0.572572544642857
+          ],
+          "auc_drop": 0.5632900371551854
+        },
+        "self_vs_neutral": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3028395162678044,
+          "inlp_auc_ci": [
+            0.16849431191879108,
+            0.450566560349169
+          ],
+          "auc_drop": 0.6971604837321956
+        },
+        "self_vs_confounder": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 1.0,
+          "inlp_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "auc_drop": 0.0
+        },
+        "third_vs_neutral": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.352087862642735,
+          "inlp_auc_ci": [
+            0.21491993464052292,
+            0.5000417130144604
+          ],
+          "auc_drop": 0.6479121373572649
+        },
+        "third_vs_confounder": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9919573957297205,
+          "baseline_auc_ci": [
+            0.9745340115560499,
+            1.0
+          ],
+          "inlp_auc": 0.48434293845947574,
+          "inlp_auc_ci": [
+            0.3358453216867948,
+            0.6375210437710437
+          ],
+          "auc_drop": 0.5076144572702448
+        },
+        "neutral_vs_confounder": {
+          "layer": 10,
+          "token_pos": "mid",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.31714590990954306,
+          "inlp_auc_ci": [
+            0.19194295634920633,
+            0.4525160710582706
+          ],
+          "auc_drop": 0.6828540900904569
+        }
+      },
+      "multiclass": {
+        "layer": 10,
+        "token_pos": "mid",
+        "n_samples": 120,
+        "baseline_acc": 0.95
+      }
+    },
+    {
+      "layer": 15,
+      "token_pos": "last",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.5083125870993955,
+          "inlp_auc_ci": [
+            0.3537831101190476,
+            0.666295238095238
+          ],
+          "auc_drop": 0.49168741290060447
+        },
+        "self_vs_neutral": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4748604133159782,
+          "inlp_auc_ci": [
+            0.3177457912457912,
+            0.6173793249809729
+          ],
+          "auc_drop": 0.5251395866840218
+        },
+        "self_vs_confounder": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 1.0,
+          "inlp_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "auc_drop": 0.0
+        },
+        "third_vs_neutral": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4449870984094508,
+          "inlp_auc_ci": [
+            0.30167977117432065,
+            0.5911481481481482
+          ],
+          "auc_drop": 0.5550129015905492
+        },
+        "third_vs_confounder": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.40407551029183947,
+          "inlp_auc_ci": [
+            0.2566750134077546,
+            0.5424251070620556
+          ],
+          "auc_drop": 0.5959244897081606
+        },
+        "neutral_vs_confounder": {
+          "layer": 15,
+          "token_pos": "last",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.34043841068980496,
+          "inlp_auc_ci": [
+            0.19999441964285716,
+            0.48780052790346906
+          ],
+          "auc_drop": 0.659561589310195
+        }
+      },
+      "multiclass": {
+        "layer": 15,
+        "token_pos": "last",
+        "n_samples": 120,
+        "baseline_acc": 1.0
+      }
+    },
+    {
+      "layer": 15,
+      "token_pos": "bos",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.728455343007432,
+          "baseline_auc_ci": [
+            0.6026506696428571,
+            0.8527960030165912
+          ],
+          "inlp_auc": 0.48592841779924395,
+          "inlp_auc_ci": [
+            0.33871536896008403,
+            0.6307046877482918
+          ],
+          "auc_drop": 0.24252692520818803
+        },
+        "self_vs_neutral": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.728497901034192,
+          "baseline_auc_ci": [
+            0.5822725091371365,
+            0.8599769551917988
+          ],
+          "inlp_auc": 0.3995919079038164,
+          "inlp_auc_ci": [
+            0.25220411706349205,
+            0.548629767291532
+          ],
+          "auc_drop": 0.3289059931303756
+        },
+        "self_vs_confounder": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6776907721559716,
+          "baseline_auc_ci": [
+            0.5317699776785715,
+            0.8125156423804227
+          ],
+          "inlp_auc": 0.6799971313562932,
+          "inlp_auc_ci": [
+            0.5316182557522762,
+            0.8125924402663534
+          ],
+          "auc_drop": -0.0023063592003216282
+        },
+        "third_vs_neutral": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.6896122574825662,
+          "baseline_auc_ci": [
+            0.5462167410714286,
+            0.8081075825216449
+          ],
+          "inlp_auc": 0.3174806032478549,
+          "inlp_auc_ci": [
+            0.18694027279814876,
+            0.4581768907563025
+          ],
+          "auc_drop": 0.3721316542347113
+        },
+        "third_vs_confounder": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.32435097028850646,
+          "baseline_auc_ci": [
+            0.18124298540965206,
+            0.4750392857142857
+          ],
+          "inlp_auc": 0.3250799724009953,
+          "inlp_auc_ci": [
+            0.18748435761957727,
+            0.4607744107744107
+          ],
+          "auc_drop": -0.0007290021124888302
+        },
+        "neutral_vs_confounder": {
+          "layer": 15,
+          "token_pos": "bos",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6803898665168778,
+          "baseline_auc_ci": [
+            0.5404837357866766,
+            0.8088251633986928
+          ],
+          "inlp_auc": 0.36598836267699647,
+          "inlp_auc_ci": [
+            0.22497264309764314,
+            0.521692583152908
+          ],
+          "auc_drop": 0.31440150383988136
+        }
+      },
+      "multiclass": {
+        "layer": 15,
+        "token_pos": "bos",
+        "n_samples": 120,
+        "baseline_acc": 0.3416666666666667
+      }
+    },
+    {
+      "layer": 15,
+      "token_pos": "first_content",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.7946686349213887,
+          "baseline_auc_ci": [
+            0.6728965592146905,
+            0.9062649060044893
+          ],
+          "inlp_auc": 0.4459337285983154,
+          "inlp_auc_ci": [
+            0.2984435125060125,
+            0.5971874441343555
+          ],
+          "auc_drop": 0.3487349063230733
+        },
+        "self_vs_neutral": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.8944559546266807,
+          "baseline_auc_ci": [
+            0.8095869076797386,
+            0.9609696180555555
+          ],
+          "inlp_auc": 0.4336436978197356,
+          "inlp_auc_ci": [
+            0.28138954171562863,
+            0.5847383808321308
+          ],
+          "auc_drop": 0.4608122568069451
+        },
+        "self_vs_confounder": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.7499497028765395,
+          "baseline_auc_ci": [
+            0.6164457983193277,
+            0.8800285714285714
+          ],
+          "inlp_auc": 0.7501266067015882,
+          "inlp_auc_ci": [
+            0.6166560066740824,
+            0.8817095734126983
+          ],
+          "auc_drop": -0.00017690382504864655
+        },
+        "third_vs_neutral": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9081826270302754,
+          "baseline_auc_ci": [
+            0.7999944382647386,
+            1.0
+          ],
+          "inlp_auc": 0.47387671977629864,
+          "inlp_auc_ci": [
+            0.3314180529613136,
+            0.6166820987654321
+          ],
+          "auc_drop": 0.4343059072539768
+        },
+        "third_vs_confounder": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.12041470947410034,
+          "baseline_auc_ci": [
+            0.02399389140271494,
+            0.22991934242412204
+          ],
+          "inlp_auc": 0.11910628355390762,
+          "inlp_auc_ci": [
+            0.02623909231200899,
+            0.2333398220244716
+          ],
+          "auc_drop": 0.0013084259201927156
+        },
+        "neutral_vs_confounder": {
+          "layer": 15,
+          "token_pos": "first_content",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9043677679562852,
+          "baseline_auc_ci": [
+            0.7931034482758621,
+            1.0
+          ],
+          "inlp_auc": 0.4840376094621082,
+          "inlp_auc_ci": [
+            0.3358733497249332,
+            0.6340722909714498
+          ],
+          "auc_drop": 0.42033015849417693
+        }
+      },
+      "multiclass": {
+        "layer": 15,
+        "token_pos": "first_content",
+        "n_samples": 120,
+        "baseline_acc": 0.4
+      }
+    },
+    {
+      "layer": 15,
+      "token_pos": "mid",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.992175439505072,
+          "baseline_auc_ci": [
+            0.9741288503177089,
+            1.0
+          ],
+          "inlp_auc": 0.43000745827697495,
+          "inlp_auc_ci": [
+            0.2870357495983192,
+            0.5802496693121693
+          ],
+          "auc_drop": 0.5621679812280971
+        },
+        "self_vs_neutral": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.32507654247771733,
+          "inlp_auc_ci": [
+            0.18099067752100842,
+            0.4748945339200273
+          ],
+          "auc_drop": 0.6749234575222827
+        },
+        "self_vs_confounder": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9988266488611311,
+          "baseline_auc_ci": [
+            0.9932659932659933,
+            1.0
+          ],
+          "inlp_auc": 0.9986972396965504,
+          "inlp_auc_ci": [
+            0.9931428571428572,
+            1.0
+          ],
+          "auc_drop": 0.00012940916458070717
+        },
+        "third_vs_neutral": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4248232102781973,
+          "inlp_auc_ci": [
+            0.27827107405462187,
+            0.5688965773809523
+          ],
+          "auc_drop": 0.5751767897218028
+        },
+        "third_vs_confounder": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9843259161059857,
+          "baseline_auc_ci": [
+            0.9564618468915345,
+            1.0
+          ],
+          "inlp_auc": 0.43630739054026957,
+          "inlp_auc_ci": [
+            0.2958401491853694,
+            0.5859766394596115
+          ],
+          "auc_drop": 0.5480185255657162
+        },
+        "neutral_vs_confounder": {
+          "layer": 15,
+          "token_pos": "mid",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3562088227425563,
+          "inlp_auc_ci": [
+            0.22655558035714282,
+            0.4961751804989082
+          ],
+          "auc_drop": 0.6437911772574437
+        }
+      },
+      "multiclass": {
+        "layer": 15,
+        "token_pos": "mid",
+        "n_samples": 120,
+        "baseline_acc": 0.95
+      }
+    },
+    {
+      "layer": 20,
+      "token_pos": "last",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4741134759077202,
+          "inlp_auc_ci": [
+            0.3268285714285714,
+            0.6227678571428571
+          ],
+          "auc_drop": 0.5258865240922799
+        },
+        "self_vs_neutral": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.47314983046309145,
+          "inlp_auc_ci": [
+            0.32581969839371155,
+            0.6100104166666666
+          ],
+          "auc_drop": 0.5268501695369086
+        },
+        "self_vs_confounder": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 1.0,
+          "inlp_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "auc_drop": 0.0
+        },
+        "third_vs_neutral": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.442331024954942,
+          "inlp_auc_ci": [
+            0.31690128968253967,
+            0.587140756302521
+          ],
+          "auc_drop": 0.5576689750450581
+        },
+        "third_vs_confounder": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.47335864133310973,
+          "inlp_auc_ci": [
+            0.32694257179934266,
+            0.6250034760845383
+          ],
+          "auc_drop": 0.5266413586668903
+        },
+        "neutral_vs_confounder": {
+          "layer": 20,
+          "token_pos": "last",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.37818864196348567,
+          "inlp_auc_ci": [
+            0.2377232142857143,
+            0.5328334587450108
+          ],
+          "auc_drop": 0.6218113580365143
+        }
+      },
+      "multiclass": {
+        "layer": 20,
+        "token_pos": "last",
+        "n_samples": 120,
+        "baseline_acc": 1.0
+      }
+    },
+    {
+      "layer": 20,
+      "token_pos": "bos",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.7492289827007387,
+          "baseline_auc_ci": [
+            0.6250403038138334,
+            0.8637265832408495
+          ],
+          "inlp_auc": 0.49948070367867714,
+          "inlp_auc_ci": [
+            0.35803149963689185,
+            0.6568687430478309
+          ],
+          "auc_drop": 0.24974827902206154
+        },
+        "self_vs_neutral": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.729259762749844,
+          "baseline_auc_ci": [
+            0.5870869644153957,
+            0.8439955106621773
+          ],
+          "inlp_auc": 0.42161694488184126,
+          "inlp_auc_ci": [
+            0.27269661458333333,
+            0.5712710084033613
+          ],
+          "auc_drop": 0.3076428178680028
+        },
+        "self_vs_confounder": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6857620420667978,
+          "baseline_auc_ci": [
+            0.5344540229885058,
+            0.8176229918229918
+          ],
+          "inlp_auc": 0.6849323266562326,
+          "inlp_auc_ci": [
+            0.5485104675958955,
+            0.8086516203703704
+          ],
+          "auc_drop": 0.0008297154105652016
+        },
+        "third_vs_neutral": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.7028387853635386,
+          "baseline_auc_ci": [
+            0.5667401960784314,
+            0.8137791991101224
+          ],
+          "inlp_auc": 0.34067304336415816,
+          "inlp_auc_ci": [
+            0.21095436923378919,
+            0.49500341961279465
+          ],
+          "auc_drop": 0.36216574199938045
+        },
+        "third_vs_confounder": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.3242824308107863,
+          "baseline_auc_ci": [
+            0.1915174364262761,
+            0.46416910457963084
+          ],
+          "inlp_auc": 0.3230346215174541,
+          "inlp_auc_ci": [
+            0.1872086223254596,
+            0.4629712025707577
+          ],
+          "auc_drop": 0.0012478092933321805
+        },
+        "neutral_vs_confounder": {
+          "layer": 20,
+          "token_pos": "bos",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6822344578616424,
+          "baseline_auc_ci": [
+            0.5406862054322992,
+            0.8054531578256302
+          ],
+          "inlp_auc": 0.37162796107514035,
+          "inlp_auc_ci": [
+            0.23399942279942276,
+            0.510035729643019
+          ],
+          "auc_drop": 0.31060649678650204
+        }
+      },
+      "multiclass": {
+        "layer": 20,
+        "token_pos": "bos",
+        "n_samples": 120,
+        "baseline_acc": 0.3416666666666667
+      }
+    },
+    {
+      "layer": 20,
+      "token_pos": "first_content",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.8278646722776547,
+          "baseline_auc_ci": [
+            0.7025381944444444,
+            0.928586691086691
+          ],
+          "inlp_auc": 0.4957054890549863,
+          "inlp_auc_ci": [
+            0.35279395406661,
+            0.6487828788610037
+          ],
+          "auc_drop": 0.3321591832226684
+        },
+        "self_vs_neutral": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.8978267711274632,
+          "baseline_auc_ci": [
+            0.8136922150687446,
+            0.9652093855218855
+          ],
+          "inlp_auc": 0.4495799290291588,
+          "inlp_auc_ci": [
+            0.2911111111111111,
+            0.5994140625
+          ],
+          "auc_drop": 0.44824684209830445
+        },
+        "self_vs_confounder": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.7580021706562743,
+          "baseline_auc_ci": [
+            0.6182623867789608,
+            0.887766554433221
+          ],
+          "inlp_auc": 0.7588846697356703,
+          "inlp_auc_ci": [
+            0.6206579048645321,
+            0.8837135069852461
+          ],
+          "auc_drop": -0.0008824990793959708
+        },
+        "third_vs_neutral": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9036634393628236,
+          "baseline_auc_ci": [
+            0.7834821428571429,
+            1.0
+          ],
+          "inlp_auc": 0.5198821306415866,
+          "inlp_auc_ci": [
+            0.37259095794252045,
+            0.6729983960352772
+          ],
+          "auc_drop": 0.38378130872123695
+        },
+        "third_vs_confounder": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.12310490219035629,
+          "baseline_auc_ci": [
+            0.028920219997528095,
+            0.22898009108946604
+          ],
+          "inlp_auc": 0.12079562026302715,
+          "inlp_auc_ci": [
+            0.03053848413631018,
+            0.23232323232323232
+          ],
+          "auc_drop": 0.0023092819273291404
+        },
+        "neutral_vs_confounder": {
+          "layer": 20,
+          "token_pos": "first_content",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.8999449741002646,
+          "baseline_auc_ci": [
+            0.7857142857142857,
+            1.0
+          ],
+          "inlp_auc": 0.45378163379621866,
+          "inlp_auc_ci": [
+            0.2986029761904762,
+            0.6100229414682539
+          ],
+          "auc_drop": 0.446163340304046
+        }
+      },
+      "multiclass": {
+        "layer": 20,
+        "token_pos": "first_content",
+        "n_samples": 120,
+        "baseline_acc": 0.4083333333333333
+      }
+    },
+    {
+      "layer": 20,
+      "token_pos": "mid",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.9957249758685704,
+          "baseline_auc_ci": [
+            0.9830183823529413,
+            1.0
+          ],
+          "inlp_auc": 0.43534874312136573,
+          "inlp_auc_ci": [
+            0.2891480153558792,
+            0.5815078124999999
+          ],
+          "auc_drop": 0.5603762327472047
+        },
+        "self_vs_neutral": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.43066150826954647,
+          "inlp_auc_ci": [
+            0.26855357142857145,
+            0.594328125
+          ],
+          "auc_drop": 0.5693384917304536
+        },
+        "self_vs_confounder": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9954212413924264,
+          "baseline_auc_ci": [
+            0.9818957983193277,
+            1.0
+          ],
+          "inlp_auc": 0.9956260938012426,
+          "inlp_auc_ci": [
+            0.9839949074074074,
+            1.0
+          ],
+          "auc_drop": -0.00020485240881618072
+        },
+        "third_vs_neutral": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.37273746577750944,
+          "inlp_auc_ci": [
+            0.24456825396825396,
+            0.521153411197627
+          ],
+          "auc_drop": 0.6272625342224906
+        },
+        "third_vs_confounder": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9901090861106809,
+          "baseline_auc_ci": [
+            0.9679666666666666,
+            1.0
+          ],
+          "inlp_auc": 0.3545317363469072,
+          "inlp_auc_ci": [
+            0.22106110866301085,
+            0.5055018187830688
+          ],
+          "auc_drop": 0.6355773497637738
+        },
+        "neutral_vs_confounder": {
+          "layer": 20,
+          "token_pos": "mid",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.34760823282890485,
+          "inlp_auc_ci": [
+            0.21555387205387205,
+            0.48887906912166773
+          ],
+          "auc_drop": 0.6523917671710951
+        }
+      },
+      "multiclass": {
+        "layer": 20,
+        "token_pos": "mid",
+        "n_samples": 120,
+        "baseline_acc": 0.95
+      }
+    },
+    {
+      "layer": 25,
+      "token_pos": "last",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.4500744853986072,
+          "inlp_auc_ci": [
+            0.30190796857463525,
+            0.5984371072146806
+          ],
+          "auc_drop": 0.5499255146013928
+        },
+        "self_vs_neutral": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.3041914447621328,
+          "inlp_auc_ci": [
+            0.16625296087915142,
+            0.44163874418997295
+          ],
+          "auc_drop": 0.6958085552378672
+        },
+        "self_vs_confounder": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9956294516725009,
+          "baseline_auc_ci": [
+            0.984,
+            1.0
+          ],
+          "inlp_auc": 0.9954638026635891,
+          "inlp_auc_ci": [
+            0.983313397574686,
+            1.0
+          ],
+          "auc_drop": 0.00016564900891180567
+        },
+        "third_vs_neutral": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.5686625843238307,
+          "inlp_auc_ci": [
+            0.42192946623093686,
+            0.7104545454545456
+          ],
+          "auc_drop": 0.43133741567616934
+        },
+        "third_vs_confounder": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.41330545296587673,
+          "inlp_auc_ci": [
+            0.2710908416759362,
+            0.5580554096638656
+          ],
+          "auc_drop": 0.5866945470341233
+        },
+        "neutral_vs_confounder": {
+          "layer": 25,
+          "token_pos": "last",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.47531346037081135,
+          "inlp_auc_ci": [
+            0.32198271180473625,
+            0.6204804202083787
+          ],
+          "auc_drop": 0.5246865396291887
+        }
+      },
+      "multiclass": {
+        "layer": 25,
+        "token_pos": "last",
+        "n_samples": 120,
+        "baseline_acc": 0.975
+      }
+    },
+    {
+      "layer": 25,
+      "token_pos": "bos",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.7459267217943187,
+          "baseline_auc_ci": [
+            0.6110014508928571,
+            0.8608668067226891
+          ],
+          "inlp_auc": 0.49803085153971804,
+          "inlp_auc_ci": [
+            0.3481240161439298,
+            0.6383146825396826
+          ],
+          "auc_drop": 0.2478958702546007
+        },
+        "self_vs_neutral": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.7302830794549298,
+          "baseline_auc_ci": [
+            0.5955567470043573,
+            0.8581927856348324
+          ],
+          "inlp_auc": 0.3998045875077984,
+          "inlp_auc_ci": [
+            0.24796119365432492,
+            0.5439942914967246
+          ],
+          "auc_drop": 0.33047849194713136
+        },
+        "self_vs_confounder": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6832635676749576,
+          "baseline_auc_ci": [
+            0.5322706251894231,
+            0.8136177163614334
+          ],
+          "inlp_auc": 0.6859562267669338,
+          "inlp_auc_ci": [
+            0.5317940848214285,
+            0.8139568968613086
+          ],
+          "auc_drop": -0.002692659091976246
+        },
+        "third_vs_neutral": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.6816201237050684,
+          "baseline_auc_ci": [
+            0.5420594837261503,
+            0.8064986228084114
+          ],
+          "inlp_auc": 0.37459295429928147,
+          "inlp_auc_ci": [
+            0.24166573660714283,
+            0.5200921040764792
+          ],
+          "auc_drop": 0.30702716940578695
+        },
+        "third_vs_confounder": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.32532641426918085,
+          "baseline_auc_ci": [
+            0.18909640429823676,
+            0.4635245686026936
+          ],
+          "inlp_auc": 0.3202707394547032,
+          "inlp_auc_ci": [
+            0.19181565656565652,
+            0.4655173066822882
+          ],
+          "auc_drop": 0.005055674814477662
+        },
+        "neutral_vs_confounder": {
+          "layer": 25,
+          "token_pos": "bos",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.6993812200177703,
+          "baseline_auc_ci": [
+            0.5510904761904762,
+            0.8229221704671859
+          ],
+          "inlp_auc": 0.37272762840413315,
+          "inlp_auc_ci": [
+            0.2378830251992017,
+            0.5256510416666667
+          ],
+          "auc_drop": 0.3266535916136371
+        }
+      },
+      "multiclass": {
+        "layer": 25,
+        "token_pos": "bos",
+        "n_samples": 120,
+        "baseline_acc": 0.3416666666666667
+      }
+    },
+    {
+      "layer": 25,
+      "token_pos": "first_content",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.8275248787138076,
+          "baseline_auc_ci": [
+            0.7021944444444445,
+            0.9389099702380952
+          ],
+          "inlp_auc": 0.489786355588386,
+          "inlp_auc_ci": [
+            0.3355033464043474,
+            0.6427955067501103
+          ],
+          "auc_drop": 0.33773852312542163
+        },
+        "self_vs_neutral": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9095451281477012,
+          "baseline_auc_ci": [
+            0.8318651105394884,
+            0.9700138888888888
+          ],
+          "inlp_auc": 0.41531690322876524,
+          "inlp_auc_ci": [
+            0.27343377349887765,
+            0.5612100862100862
+          ],
+          "auc_drop": 0.4942282249189359
+        },
+        "self_vs_confounder": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.7365807646657716,
+          "baseline_auc_ci": [
+            0.5881138392857143,
+            0.8692540674603175
+          ],
+          "inlp_auc": 0.7393680906665638,
+          "inlp_auc_ci": [
+            0.5855498015873016,
+            0.8687977600751052
+          ],
+          "auc_drop": -0.002787326000792234
+        },
+        "third_vs_neutral": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 0.9079938719130208,
+          "baseline_auc_ci": [
+            0.7941059757236227,
+            1.0
+          ],
+          "inlp_auc": 0.556096751290987,
+          "inlp_auc_ci": [
+            0.4017508417508418,
+            0.7050736158153038
+          ],
+          "auc_drop": 0.3518971206220338
+        },
+        "third_vs_confounder": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.10701818140013021,
+          "baseline_auc_ci": [
+            0.03883120928015256,
+            0.196670814479638
+          ],
+          "inlp_auc": 0.10922069861142703,
+          "inlp_auc_ci": [
+            0.03944377990430624,
+            0.19444985168705967
+          ],
+          "auc_drop": -0.0022025172112968144
+        },
+        "neutral_vs_confounder": {
+          "layer": 25,
+          "token_pos": "first_content",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9059406875928621,
+          "baseline_auc_ci": [
+            0.7901491352012185,
+            1.0
+          ],
+          "inlp_auc": 0.48311544806157364,
+          "inlp_auc_ci": [
+            0.32812323246606334,
+            0.6440749518314
+          ],
+          "auc_drop": 0.4228252395312884
+        }
+      },
+      "multiclass": {
+        "layer": 25,
+        "token_pos": "first_content",
+        "n_samples": 120,
+        "baseline_acc": 0.425
+      }
+    },
+    {
+      "layer": 25,
+      "token_pos": "mid",
+      "pairwise": {
+        "self_vs_third": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "self_vs_third",
+          "n_samples": 60,
+          "baseline_auc": 0.9900771886086867,
+          "baseline_auc_ci": [
+            0.9687456158810326,
+            1.0
+          ],
+          "inlp_auc": 0.4808620569828811,
+          "inlp_auc_ci": [
+            0.3355622194163861,
+            0.6272321428571428
+          ],
+          "auc_drop": 0.5092151316258056
+        },
+        "self_vs_neutral": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "self_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.43010591411618926,
+          "inlp_auc_ci": [
+            0.2689939599926013,
+            0.5802835978835978
+          ],
+          "auc_drop": 0.5698940858838107
+        },
+        "self_vs_confounder": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "self_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9854344859629702,
+          "baseline_auc_ci": [
+            0.9586995638427931,
+            1.0
+          ],
+          "inlp_auc": 0.9856307283117798,
+          "inlp_auc_ci": [
+            0.9606958724146224,
+            1.0
+          ],
+          "auc_drop": -0.00019624234880954994
+        },
+        "third_vs_neutral": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "third_vs_neutral",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.35718762159914114,
+          "inlp_auc_ci": [
+            0.2285249318582652,
+            0.5018353726362624
+          ],
+          "auc_drop": 0.6428123784008588
+        },
+        "third_vs_confounder": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "third_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 0.9676095960380992,
+          "baseline_auc_ci": [
+            0.9221291886818688,
+            0.9964791618578983
+          ],
+          "inlp_auc": 0.39062285800883234,
+          "inlp_auc_ci": [
+            0.23608217592592595,
+            0.5328619909502263
+          ],
+          "auc_drop": 0.5769867380292668
+        },
+        "neutral_vs_confounder": {
+          "layer": 25,
+          "token_pos": "mid",
+          "comparison": "neutral_vs_confounder",
+          "n_samples": 60,
+          "baseline_auc": 1.0,
+          "baseline_auc_ci": [
+            0.9999999999999999,
+            1.0
+          ],
+          "inlp_auc": 0.34465459138676235,
+          "inlp_auc_ci": [
+            0.20797533936651583,
+            0.49616240266963285
+          ],
+          "auc_drop": 0.6553454086132376
+        }
+      },
+      "multiclass": {
+        "layer": 25,
+        "token_pos": "mid",
+        "n_samples": 120,
+        "baseline_acc": 0.875
+      }
+    }
+  ]
+}

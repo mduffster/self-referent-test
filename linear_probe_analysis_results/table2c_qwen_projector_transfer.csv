@@ -1,0 +1,3 @@
+test,direction,auc,passes
+Projector_Transfer,Base→Instruct,0.7466666666666667,True
+Projector_Transfer,Instruct→Base,0.7577777777777778,True
